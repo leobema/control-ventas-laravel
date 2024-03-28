@@ -21,10 +21,20 @@ export default function Authenticated({ user, header, children }) {
                             </div>
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink href={route('dashboard')} active={route().current('dashboard')}>
-                                    Dashboard
+                                <NavLink 
+                                href={route('dashboard')} 
+                                active={route().current('dashboard')}
+                                >
+                                    Estadística
+                                </NavLink>
+                                <NavLink 
+                                href={route('products.index')} 
+                                active={route().current('products.index')}
+                                >
+                                    Inventario Productos 
                                 </NavLink>
                             </div>
+                            
                         </div>
 
                         <div className="hidden sm:flex sm:items-center sm:ms-6">
@@ -36,7 +46,7 @@ export default function Authenticated({ user, header, children }) {
                                                 type="button"
                                                 className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
                                             >
-                                                {user.name}
+                                                {user && user.name}
 
                                                 <svg
                                                     className="ms-2 -me-0.5 h-4 w-4"
@@ -92,15 +102,24 @@ export default function Authenticated({ user, header, children }) {
 
                 <div className={(showingNavigationDropdown ? 'block' : 'hidden') + ' sm:hidden'}>
                     <div className="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink href={route('dashboard')} active={route().current('dashboard')}>
-                            Dashboard
+                        <ResponsiveNavLink 
+                        href={route('dashboard')} 
+                        active={route().current('dashboard')}
+                        >
+                            Estadística
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink 
+                        href={route('products.index')} 
+                        active={route().current('products.index')}
+                        >
+                        Inventario Productos 
                         </ResponsiveNavLink>
                     </div>
 
                     <div className="pt-4 pb-1 border-t border-gray-200">
                         <div className="px-4">
-                            <div className="font-medium text-base text-gray-800">{user.name}</div>
-                            <div className="font-medium text-sm text-gray-500">{user.email}</div>
+                            <div className="font-medium text-base text-gray-800">{user && user.name}</div>
+                            <div className="font-medium text-sm text-gray-500">{user && user.email}</div>
                         </div>
 
                         <div className="mt-3 space-y-1">
