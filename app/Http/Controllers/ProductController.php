@@ -54,46 +54,43 @@ class ProductController extends Controller
     }
 
     public function update(Request $request, Product $product)
-{
-    $this->authorize('update', $product);
-
-    // Validar datos
-    $validated = $request->validate([
-        'product' => 'required|string|max:60',
-        // Agrega aquí las validaciones necesarias para los otros campos de Product
-    ]);
-
-    // Actualizar el producto
-    $product->update($validated);
-
-    // Verificar si se proporciona un diseño en la solicitud
-    if ($request->has('design')) {
-        $designData = $request->validate([
-            'design' => 'required|string', // Agrega aquí las validaciones necesarias para los otros campos de Design
-            'stock' => 'required|integer',
-            'price' => 'required|integer',
-            'description' => 'required|string',
+    {
+        // Validar datos
+        $validated = $request->validate([
+            'product' => 'required|string|max:60',
+            // Agrega aquí las validaciones necesarias para los otros campos de Product
         ]);
-
-        // Obtener el primer diseño asociado al producto o crear uno nuevo si no existe
-        $design = $product->designs->first();
-        if (!$design) {
-            $design = new Design();
-            $design->product_id = $product->id; // Asignar el ID del producto al diseño
+    
+        // Actualizar el producto
+        $product->update($validated);
+    
+        // Verificar si se proporciona un diseño en la solicitud
+        if ($request->has('design')) {
+            $designData = $request->validate([
+                'design' => 'required|string', // Agrega aquí las validaciones necesarias para los otros campos de Design
+                'stock' => 'required|integer',
+                'price' => 'required|integer',
+                'description' => 'required|string',
+            ]);
+    
+            // Obtener el diseño asociado al producto o crear uno nuevo si no existe
+            $design = $product->designs->first();
+    
+            // Si no hay un diseño existente, creamos uno nuevo
+            if (!$design) {
+                $design = new Design();
+                // Asignar el ID del producto al diseño
+                $design->product_id = $product->id;
+            }
+    
+            // Actualizar los datos del diseño
+            $design->fill($designData);
+            $design->save();
         }
-
-        // Actualizar los datos del diseño
-        $design->design = $designData['design'];
-        $design->stock = $designData['stock'];
-        $design->description = $designData['description'];
-        $design->price = $designData['price'];
-        // Completa aquí el resto de asignaciones de atributos para el modelo Design
-        $design->save();
+    
+        // Redireccionar a alguna vista o acción deseada
+        return redirect()->route('products.index');
     }
-
-    // Redireccionar a alguna vista o acción deseada
-    return redirect()->route('products.index');
-}
 
     public function destroy(Product $product)
     {

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import AddProduct from "@/Components/AddProduct";
 import { usePage } from '@inertiajs/react'
-//import UpdateProduct from "../components/UpdateProduct"; 
+import UpdateProduct from "@/Components/UpdateProduct"; 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 //import DeleteProduct from "../components/DeleteProduct";
 import PrimaryButton from "@/Components/PrimaryButton";
@@ -13,14 +13,15 @@ const Index = ({products}) => {
   const [deletingProductId, setDeletingProductId] = useState(null);
   const {auth} = usePage().props
     //const [editing, setEditing] = useState(false)
-  //const [selectedProductId, setSelectedProductId] = useState(null);
+  const [selectedProductId, setSelectedProductId] = useState(null);
  // const [ products, setProducts ] = useState ([]);
- // const [updateProduct, setUpdateProduct] = useState([]);
+  const [updateProduct, setUpdateProduct] = useState([]);
   const [showProductModal, setShowProductModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [ filteredProducts, setFilteredProducts ] = useState([]);
   const [searchTerm, setSearchTerm] = useState();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+
 
   const handleEditProduct = (productId) => {
     setEditingProductId(productId);
@@ -45,27 +46,31 @@ const Index = ({products}) => {
     post(route('products.index'), {onSuccess: ()=> reset()})
   } */
 
-  // Modal de confirmación para eliminar un ítem
+/*   // Modal de confirmación para eliminar un ítem
   const showDeleteConfirmation = (id) => {
     setShowDeleteModal(true);
     setSelectedProductId(id); // Set the selected product ID
-  };
+  }; */
 
 /*   const setItemToDelete = (id) => {
     setSelectedProductId(id); 
   }; */
-
+  console.log('probndo', products.id)
 
   // Modal for Product ADD
   const addProductModalSetting = () => {
     setShowProductModal(prevState => !prevState);
   };
 
-  // Modal for Product UPDATE
+   // Modal for Product UPDATE
   const updateProductModalSetting = (productId) => {
     setSelectedProductId(productId);
+    setShowUpdateModal(true);
+    
     // Lógica para mostrar el modal aquí
-  };
+  }; 
+
+
 
   const handlePageUpdate = () => {
     getAllProducts();
@@ -226,7 +231,7 @@ const contarUnidadesPorEstado = (estado) => {
           </div>
         </div>
 
-        {console.log(products)}
+        {console.log('aqui', selectedProductId)}
         
 
         {showProductModal && (
@@ -238,7 +243,7 @@ const contarUnidadesPorEstado = (estado) => {
         {showUpdateModal && (
            <UpdateProduct
             productId={selectedProductId}
-            updateProductData={updateProduct}
+            productData={updateProduct}
             updateModalSetting={updateProductModalSetting}
             handlePageUpdate={handlePageUpdate}
           /> 
@@ -398,17 +403,20 @@ const contarUnidadesPorEstado = (estado) => {
                 )}
                     </td>
                     <td className="whitespace-nowrap px-4 py-2 text-gray-700">
+
                       <button
                         className="text-green-700 cursor-pointer"
-                        
                         onClick={() => {
+                          
                           setSelectedProductId(product.id);
+                          console.log(product.id)
                           setShowUpdateModal(true);
                           setUpdateProduct(product); 
                         }}
                       >
                         Editar{" "}
                       </button>
+                    
                       <span
                         className="text-red-600 px-2 cursor-pointer"
                         onClick={() => showDeleteConfirmation(product.id)}
@@ -418,6 +426,7 @@ const contarUnidadesPorEstado = (estado) => {
                       
                     </td>
                   </tr>
+                  
              ))}
             </tbody>
           </table>

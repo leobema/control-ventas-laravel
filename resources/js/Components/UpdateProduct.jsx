@@ -2,32 +2,41 @@ import { Fragment, useRef, useState } from "react";
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import { Dialog, Transition } from "@headlessui/react";
 import InputError from '@/Components/InputError'
-import { useForm } from '@inertiajs/react'
+import { useForm, usePage } from '@inertiajs/react'
 //import { PlusIcon } from "@heroicons/react/24/outline";
 //import { useNavigate } from 'react-router-dom'
 import PrimaryButton from "./PrimaryButton";
 
-const AddProduct = ({auth}) => {
-
-    const {data, setData, post, processing, reset, errors} = useForm({
-        product: '',
-        design: '',
-        price: '',
-        stock: '',
-        description: '',
-    })
+const UpdateProduct = ({productId, productData, updateModalSetting}) => {
+    const {auth} = usePage().props
+    //const [editing, setEditing] = useState(false)
+    const {data, setData, patch, processing, reset, errors} = useForm({
+        product: productData.product,
+        design: productData.designs && productData.designs.length > 0
+             ? productData.designs.map(design => design.design).join(', ')
+             : '',
+        price: productData.designs && productData.designs.length > 0
+        ? productData.designs.map(design => design.price).join(', ')
+        : '',
+        stock: productData.designs && productData.designs.length > 0
+        ? productData.designs.map(design => design.stock).join(', ')
+        : '',
+        description: productData.designs && productData.designs.length > 0
+        ? productData.designs.map(design => design.description).join(', ')
+        : '',
+    });
+    
 
 
     //const navigate = useNavigate()
     const [open, setOpen] = useState(true);
     const cancelButtonRef = useRef(null);
 
-    const submit =  (e) => {
+    const submit = (e) => {
         e.preventDefault()
-        console.log(data)
-        post(route('products.store'), {onSuccess: ()=> reset()} );
-        //setOpen(false);
-        window.location.reload(); // Recargar la página
+        patch(route('products.update', {product: productId}), {onSuccess: ()=> reset()} );
+        setOpen(false);
+        //window.location.reload(); // Recargar la página
         //navigate('products.index');
     } 
   
@@ -41,7 +50,7 @@ const AddProduct = ({auth}) => {
         as="div"
         className="relative z-10"
         initialFocus={cancelButtonRef}
-        onClose={setOpen}
+        onClose={() => setOpen(false)}
       >
         <Transition.Child
           as={Fragment}
@@ -80,8 +89,10 @@ const AddProduct = ({auth}) => {
                         as="h3"
                         className="text-lg font-semibold leading-6 text-gray-900 "
                       >
-                        Agregar Producto
+                        Editar Producto
                       </Dialog.Title>
+                     
+                     
                       <form onSubmit={submit}>
                         <div className="grid grid-flow-row gap-4 mb-4 mt-4 sm:grid-cols-2">
                           <div className="col-span-2">
@@ -176,23 +187,26 @@ const AddProduct = ({auth}) => {
                             </textarea>
                           </div>
                         </div>
+                   
                         <div className=" px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                           <PrimaryButton
                             className="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto"
                             disabled = {processing}
                           >
-                            Agregar Producto
+                            Guardar Cambios
                           </PrimaryButton>
                           <button
                             type="button"
                             className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                            onClick={
-                              () => setOpen(false)}
+                            onClick={()=> reset()}
+                            
                           >
+                            
                             Cancelar
                           </button>
                         </div>
                       </form>
+                         
                     </div>
                   </div>
                 </div>
@@ -207,4 +221,4 @@ const AddProduct = ({auth}) => {
     </>
   );
 }
-export default AddProduct
+export default UpdateProduct
