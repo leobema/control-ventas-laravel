@@ -27,9 +27,16 @@ Route::get('/', function () {
     ]);
 });
 
-Route::resource('products', ProductController::class)
-    ->only(['index', 'store', 'update', 'destroy'])
-    ->middleware(['auth']);
+Route::middleware('auth')->group(function () {
+    Route::resource('products', ProductController::class)
+        ->only(['index', 'store', 'update', 'destroy']);
+    
+   // Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
+
+    // Otras rutas protegidas por autenticación
+});
+
+
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

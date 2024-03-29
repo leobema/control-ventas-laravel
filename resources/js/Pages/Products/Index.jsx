@@ -1,61 +1,37 @@
-import React, { useState } from "react";
+import React, { useState  } from "react";
 import AddProduct from "@/Components/AddProduct";
 import { usePage } from '@inertiajs/react'
 import UpdateProduct from "@/Components/UpdateProduct"; 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-//import DeleteProduct from "../components/DeleteProduct";
-import PrimaryButton from "@/Components/PrimaryButton";
+import { Dialog, Transition } from "@headlessui/react";
+import { router } from '@inertiajs/react'
+
 
 const Index = ({products}) => {
-  //const {auth} = usePage().props
-  //const { products } = usePage().props;
-  const [editingProductId, setEditingProductId] = useState(null);
-  const [deletingProductId, setDeletingProductId] = useState(null);
   const {auth} = usePage().props
-    //const [editing, setEditing] = useState(false)
   const [selectedProductId, setSelectedProductId] = useState(null);
- // const [ products, setProducts ] = useState ([]);
+  const [selectedProductDeleteId, setSelectedProductDeleteId] = useState(null);
   const [updateProduct, setUpdateProduct] = useState([]);
   const [showProductModal, setShowProductModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
-  const [ filteredProducts, setFilteredProducts ] = useState([]);
   const [searchTerm, setSearchTerm] = useState();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
 
-  const handleEditProduct = (productId) => {
-    setEditingProductId(productId);
-  };
-
-  const handleDeleteProduct = (productId) => {
-    setDeletingProductId(productId);
-  };
-
-  const handleCancelEdit = () => {
-    setEditingProductId(null);
-  };
-
-  const handleCancelDelete = () => {
-    setDeletingProductId(null);
-  };
-
-
-/*   const getAllProducts = (e) => {
-    e.preventDefault()
-    console.log(data)
-    post(route('products.index'), {onSuccess: ()=> reset()})
-  } */
-
-/*   // Modal de confirmación para eliminar un ítem
+   // Modal de confirmación para eliminar un ítem
   const showDeleteConfirmation = (id) => {
     setShowDeleteModal(true);
-    setSelectedProductId(id); // Set the selected product ID
-  }; */
+    setSelectedProductDeleteId(id); // Set the selected product ID
+    console.log('probndo', selectedProductDeleteId)
+  }; 
 
-/*   const setItemToDelete = (id) => {
-    setSelectedProductId(id); 
-  }; */
-  console.log('probndo', products.id)
+  const deleteProduct = () => {
+    router.delete(`/products/${selectedProductDeleteId}`)
+    setShowDeleteModal(false);
+  }; 
+  
+  
+
 
   // Modal for Product ADD
   const addProductModalSetting = () => {
@@ -71,11 +47,6 @@ const Index = ({products}) => {
   }; 
 
 
-
-  const handlePageUpdate = () => {
-    getAllProducts();
-  };
-
 // Handle Search Term
 const handleSearchTerm = (e) => {
   const term = e.target.value.toLowerCase(); // Convertir el término de búsqueda a minúsculas
@@ -90,59 +61,10 @@ const handleSearchTerm = (e) => {
   setFilteredProducts(filteredProducts);
 };
 
-/* // Función para calcular la suma total del valor de stock
-const calcularValorTotalStock = () => {
-  let total = 0;
-
-  // Iterar sobre cada producto y sumar el valor de su stock
-  products.forEach(product => {
-    if (product.designs.length > 0) {
-      total += product.designs[0].stock * product.designs[0].price;
-    }
-  });
-
-  return total;
-};
- */
-/* // Función para calcular la suma total de unidades de stock
-const calcularUnidadesTotalesStock = () => {
-  let totalUnidades = 0;
-
-  // Iterar sobre cada producto y sumar la cantidad de stock de cada diseño
-  products.forEach(product => {
-    if (product.designs.length > 0) {
-      totalUnidades += product.designs.reduce((acc, curr) => acc + curr.stock, 0);
-    }
-  });
-
-  return totalUnidades;
-}; */
-
-/* // Función para calcular la cantidad de unidades de stock con diferentes estados
-const contarUnidadesPorEstado = (estado) => {
-  let count = 0;
-
-  // Iterar sobre cada producto y sumar la cantidad de stock con el estado dado
-  products.forEach(product => {
-    if (product.designs.length > 0) {
-      count += product.designs.filter(design => {
-        if (estado === "Stock Bajo") {
-          return design.stock > 0 && design.stock <= 3;
-        } else if (estado === "Sin Stock") {
-          return design.stock === 0;
-        }
-        return false;
-      }).length;
-    }
-  });
-
-  return count;
-}; */
-
 
   return (
     <div>
-    <AuthenticatedLayout auth={auth}>
+    <AuthenticatedLayout user={auth.user}>
     <div className="col-span-12 lg:col-span-10  flex justify-center">
       <div className=" flex flex-col gap-5 w-11/12">
         <div className="bg-white rounded p-3">
@@ -231,13 +153,10 @@ const contarUnidadesPorEstado = (estado) => {
           </div>
         </div>
 
-        {console.log('aqui', selectedProductId)}
-        
 
         {showProductModal && (
           <AddProduct
             addProductModalSetting={addProductModalSetting}
-            handlePageUpdate={handlePageUpdate}
           />
         )}
         {showUpdateModal && (
@@ -245,24 +164,60 @@ const contarUnidadesPorEstado = (estado) => {
             productId={selectedProductId}
             productData={updateProduct}
             updateModalSetting={updateProductModalSetting}
-            handlePageUpdate={handlePageUpdate}
           /> 
           )}
 
+          {/* Modal de confirmación para eliminar */} 
         {showDeleteModal && (
-          <DeleteProduct 
-            productId={selectedProductId}
-            showDeleteModal={showDeleteModal}
-            setShowDeleteModal={setShowDeleteModal}
-            endpoint={endpoint}
-            setProducts={setProducts}
-            products={products}
-            setFilteredProducts={setFilteredProducts}
-            filteredProducts={filteredProducts}
-            showDeleteConfirmation={showDeleteConfirmation}
-            setItemToDelete={setItemToDelete}
-          />
-        )}
+                    <Transition.Root show={true}>
+                    <Dialog
+                        as="div"
+                        className="fixed inset-0 overflow-y-auto flex items-center justify-center"
+                        onClose={() => setShowDeleteModal(false)}
+                    >
+                        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+                        <Transition.Child
+                        enter="ease-out duration-300"
+                        enterFrom="opacity-0 translate-y-4"
+                        enterTo="opacity-100 translate-y-0"
+                        leave="ease-in duration-200"
+                        leaveFrom="opacity-100 translate-y-0"
+                        leaveTo="opacity-0 translate-y-4"
+                        >
+                        <div className="relative top-20 mx-auto w-full max-w-lg">
+                            <div className="bg-white rounded-lg shadow-xl p-6">
+                            <div className="text-center">
+                                <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900">
+                                Confirmar eliminación
+                                </Dialog.Title>
+                                <div className="mt-2">
+                                <p className="text-sm text-gray-500">
+                                    ¿Estás seguro de que deseas eliminar este item? Esta acción no se puede deshacer.
+                                </p>
+                                </div>
+                            </div>
+                            <div className="mt-4 flex justify-center">
+                                <button
+                                type="button"
+                                className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 mr-3"
+                                onClick={() => deleteProduct(selectedProductId)}
+                                >
+                                Eliminar
+                                </button>
+                                <button
+                                type="button"
+                                className="inline-flex justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                onClick={() => setShowDeleteModal(false)}
+                                >
+                                Cancelar
+                                </button>
+                            </div>
+                            </div>
+                        </div>
+                        </Transition.Child>
+                    </Dialog>
+                </Transition.Root>
+                )}
 
 
        
@@ -294,10 +249,11 @@ const contarUnidadesPorEstado = (estado) => {
               <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold p-2 text-xs  rounded"
                 onClick={addProductModalSetting}
+                
               >
-                {/*<Link to="/addProduct">Add Product</Link>*/}
                 Agregar Producto
               </button>
+              
             </div>
           </div>
           <table className="min-w-full divide-y-2 divide-gray-200 text-sm">
@@ -409,7 +365,6 @@ const contarUnidadesPorEstado = (estado) => {
                         onClick={() => {
                           
                           setSelectedProductId(product.id);
-                          console.log(product.id)
                           setShowUpdateModal(true);
                           setUpdateProduct(product); 
                         }}

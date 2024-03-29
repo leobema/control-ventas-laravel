@@ -94,7 +94,6 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
-        $this->authorize('delete', $product);
         $product->delete();
         return redirect(route('products.index'));
     }
