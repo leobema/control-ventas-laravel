@@ -3,8 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import { Dialog, Transition } from "@headlessui/react";
 import InputError from '@/Components/InputError'
 import { useForm } from '@inertiajs/react'
-//import { PlusIcon } from "@heroicons/react/24/outline";
-//import { useNavigate } from 'react-router-dom'
+import { PlusIcon } from "@heroicons/react/24/outline";
 import PrimaryButton from "./PrimaryButton";
 
 const AddProduct = ({auth}) => {
@@ -16,8 +15,6 @@ const AddProduct = ({auth}) => {
         description: '',
     })
 
-
-    //const navigate = useNavigate()
     const [open, setOpen] = useState(true);
     const cancelButtonRef = useRef(null);
 
@@ -25,9 +22,7 @@ const AddProduct = ({auth}) => {
         e.preventDefault()
         console.log(data)
         post(route('products.store'), {onSuccess: ()=> reset()} );
-        //setOpen(false);
-        window.location.reload(); // Recargar la página
-        //navigate('products.index');
+        window.location.reload(); 
     } 
   
 
@@ -69,10 +64,10 @@ const AddProduct = ({auth}) => {
                 <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                   <div className="sm:flex sm:items-start">
                     <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
-                      {/* <PlusIcon
+                       <PlusIcon
                         className="h-6 w-6 text-blue-400"
                         aria-hidden="true"
-                      /> */}
+                      /> 
                     </div>
                     <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left ">
                       <Dialog.Title

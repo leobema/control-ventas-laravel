@@ -3,8 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import { Dialog, Transition } from "@headlessui/react";
 import InputError from '@/Components/InputError'
 import { useForm, usePage } from '@inertiajs/react'
-//import { PlusIcon } from "@heroicons/react/24/outline";
-//import { useNavigate } from 'react-router-dom'
+import { ArrowLongUpIcon } from "@heroicons/react/24/outline";
 import PrimaryButton from "./PrimaryButton";
 
 const UpdateProduct = ({productId, productData, updateModalSetting}) => {
@@ -26,18 +25,13 @@ const UpdateProduct = ({productId, productData, updateModalSetting}) => {
         : '',
     });
     
-
-
-    //const navigate = useNavigate()
     const [open, setOpen] = useState(true);
     const cancelButtonRef = useRef(null);
 
     const submit = (e) => {
         e.preventDefault()
         patch(route('products.update', {product: productId}), {onSuccess: ()=> reset()} );
-        //setOpen(false);
-        window.location.reload(); // Recargar la página
-        //navigate('products.index');
+        window.location.reload();
     } 
   
 
@@ -79,10 +73,10 @@ const UpdateProduct = ({productId, productData, updateModalSetting}) => {
                 <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                   <div className="sm:flex sm:items-start">
                     <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
-                      {/* <PlusIcon
+                       <ArrowLongUpIcon
                         className="h-6 w-6 text-blue-400"
                         aria-hidden="true"
-                      /> */}
+                      /> 
                     </div>
                     <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left ">
                       <Dialog.Title
@@ -198,7 +192,6 @@ const UpdateProduct = ({productId, productData, updateModalSetting}) => {
                           <button
                             type="button"
                             className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                            //onClick={()=> reset()}
                             onClick={()=> window.location.reload()}
                           >
                             
