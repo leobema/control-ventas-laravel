@@ -33,6 +33,12 @@ export default function Authenticated({ user, header, children }) {
                                 >
                                     Inventario Productos 
                                 </NavLink>
+                                <NavLink 
+                                href={route('sales.index')} 
+                                active={route().current('sales.index')}
+                                >
+                                    Control Ventas 
+                                </NavLink>
                             </div>
                             
                         </div>
@@ -113,6 +119,12 @@ export default function Authenticated({ user, header, children }) {
                         active={route().current('products.index')}
                         >
                         Inventario Productos 
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink 
+                        href={route('sales.index')} 
+                        active={route().current('sales.index')}
+                        >
+                        Control Ventas 
                         </ResponsiveNavLink>
                     </div>
 

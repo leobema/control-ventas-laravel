@@ -1,4 +1,4 @@
-import { Fragment, useRef, useState } from "react";
+import { Fragment, useRef, useState, useEffect } from "react";
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import { Dialog, Transition } from "@headlessui/react";
 import InputError from '@/Components/InputError'
@@ -6,25 +6,63 @@ import { useForm } from '@inertiajs/react'
 import { PlusIcon } from "@heroicons/react/24/outline";
 import PrimaryButton from "./PrimaryButton";
 
-const AddProduct = ({auth}) => { 
-    const {data, setData, post, processing, reset, errors} = useForm({
-      product: '',
-      design: '',
-      price: '',
-      stock: '',
-      description: '',
-    })
+const AddSale = ({auth, products}) => {
+  const [selectedProductName, setSelectedProductName] = useState('');
+  const [availableDesigns, setAvailableDesigns] = useState([]);
+  const [selectedAvailableDesign, setSelectedAvailableDesign] = useState(null);
 
-    const [open, setOpen] = useState(true);
-    const cancelButtonRef = useRef(null);
-
-    const submit =  (e) => {
-        e.preventDefault()
-        console.log(data)
-        post(route('products.store'), {onSuccess: ()=> reset()} );
-        window.location.reload(); 
-    } 
+  const uniqueProductNames = [...new Set(products.map(product => product.product))]; 
   
+  const initialFormData = {
+    product: selectedProductName,
+    design: '',
+    client: '',
+    stock: '',
+    saleschannel: '',
+    methodpay: '',
+    price: '',
+    date: '',
+    description: '',
+}
+
+const {data, setData, post, processing, reset, errors} = useForm(initialFormData);
+
+useEffect(() => {
+  if (selectedAvailableDesign) {
+    setData('design', selectedAvailableDesign ? selectedAvailableDesign.design : '');
+  }
+}, [selectedAvailableDesign]);
+
+const handleProductChange = (e) => {
+  const selectedProductName = e.target.value;
+  setSelectedProductName(selectedProductName);
+  setData('product', selectedProductName);
+  const productsWithSameName = products.filter(product => product.product === selectedProductName);
+  const allDesigns = productsWithSameName.flatMap(product => product.designs || []);
+  setAvailableDesigns(allDesigns);
+};
+
+const handleDesignChange = (e) => {
+  const selectedDesignId = parseInt(e.target.value);
+  const selectedDesign = availableDesigns.find(design => design.id === selectedDesignId);
+  setSelectedAvailableDesign(selectedDesign);
+  setData('design', selectedDesign ? selectedDesign.design : '');
+};
+
+const [open, setOpen] = useState(true);
+const cancelButtonRef = useRef(null);
+
+const submit = (e) => {
+  e.preventDefault();
+  const selectedDesignName = selectedAvailableDesign ? selectedAvailableDesign.design : '';
+   post(route('sales.store'), { 
+    design: selectedDesignName,
+    onSuccess: () => reset() 
+  }); 
+};
+
+  
+const hasProductError = errors && errors.product;
 
   return (
     // Modal
@@ -74,7 +112,7 @@ const AddProduct = ({auth}) => {
                         as="h3"
                         className="text-lg font-semibold leading-6 text-gray-900 "
                       >
-                        Agregar Producto
+                        Agregar Venta
                       </Dialog.Title>
                       <form onSubmit={submit}>
                         <div className="grid grid-flow-row gap-4 mb-4 mt-4 sm:grid-cols-2">
@@ -84,48 +122,112 @@ const AddProduct = ({auth}) => {
                             >
                               Producto
                             </label>
-                            <InputError message={errors.product} customMessage="Este campo es obligatorio." className='mt-2'/>
-                            <input
-                              type="text"
+                              <InputError message={hasProductError ? errors.product : null} className='mt-2'/> 
+                            <select
                               value={data.product}
-                              onChange={ (e)=> setData('product', e.target.value)}
+                              //value={selectedProductName}
+                              onChange={handleProductChange} 
                               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                              placeholder="Ej. Remera"
-                            />
+                            >
+                               <option value="">Seleccione un producto</option>
+                                {uniqueProductNames.map((productName, index) => (
+                                  <option key={index} value={productName}>
+                                    {productName}
+                                  </option>
+                              ))}
+                            </select>
+                           
+                            {console.log('data.design', data.design)}
+                            
                           </div>
                         </div>
                         <div className="grid grid-flow-row gap-4 my-4 grid-cols-2">
                           <div className="col-span-2">
                               <div className="grid gap-4 my-2 grid-cols-2">
-                                <div>
+                                 <div className="col-span-2">
                                   <label
                                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                                   >
                                     Diseño 
                                   </label>
-                                  <InputError message={errors.design} customMessage="Este campo es obligatorio." className='mt-2'/>
-                                  <input
-                                    type="text"
+                                  {/* <InputError message={errors.design}  className='mt-2'/> */}
+                                  <select
+                                    //value={selectedDesign.design}
+                                    //value={data.design}
                                     value={data.design}
-                                    onChange={ (e)=> setData('design', e.target.value)}
+                                    onChange={handleDesignChange}  
                                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                    placeholder="Ej. Sonic"
-                                  />
-                                </div>
+                                  >
+                                    <option value="">Seleccione un diseño</option>
+                                    {availableDesigns.map(designItem => (
+                                      // Verificar si design es definido antes de renderizar la opción
+                                      
+                                        <option key={designItem.id} value={designItem.id} >
+                                          {designItem.design}
+                                        </option>
+                                    ))}
+                                  </select>
+                                  
+                                </div> 
 
                                 <div>
                                   <label
                                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                                   >
-                                    Stock 
+                                    Cliente 
                                   </label>
-                                  <InputError message={errors.stock} customMessage="Este campo es obligatorio." className='mt-2'/>
+                                  {/* <InputError message={errors.client} className='mt-2'/> */}
+                                  <input
+                                    type="text"
+                                    value={data.client}
+                                    onChange={ (e)=> setData('client', e.target.value)}
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    placeholder="Nombre"
+                                  />
+                                </div>
+                                <div>
+                                  <label
+                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                  >
+                                    Cant
+                                  </label>
+                                  {/* <InputError message={errors.stock} className='mt-2'/> */}
                                   <input
                                     type="number"
                                     value={data.stock}
                                     onChange={ (e)=> setData('stock', e.target.value)}
                                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                     placeholder="0 - 999"
+                                  />
+                                </div>
+                                <div>
+                                  <label
+                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                  >
+                                    Canal de Venta 
+                                  </label>
+                                  {/* <InputError message={errors.saleschannel} className='mt-2'/> */}
+                                  <input
+                                    type="text"
+                                    value={data.saleschannel}
+                                    onChange={ (e)=> setData('saleschannel', e.target.value)}
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    placeholder="Mercadolibre"
+                                  />
+                                </div>
+                                <div>
+                                  <label
+                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                  >
+                                    Método de Pago 
+                                  </label>
+                                  {/* <InputError message={errors.methodpay} className='mt-2'/> */}
+                                  <input
+                                    type="text"
+                                    value={data.methodpay}
+                                    onChange={ (e)=> setData('methodpay', e.target.value)}
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    placeholder="Efectivo"
                                   />
                                 </div>
                               </div>
@@ -138,7 +240,7 @@ const AddProduct = ({auth}) => {
                             >
                               Precio
                             </label>
-                            <InputError message={errors.price} customMessage="Este campo es obligatorio." className='mt-2'/>
+                            {/* <InputError message={errors.price} className='mt-2'/> */}
                             <input
                               type="number"
                               value={data.price}
@@ -147,17 +249,32 @@ const AddProduct = ({auth}) => {
                               placeholder="$299"
                             />
                           </div>
+                          <div>
+                            <label 
+                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            >
+                              Fecha
+                            </label>
+                            {/* <InputError message={errors.date} className='mt-2'/> */}
+                            <input
+                              type="date"
+                              value={data.date}
+                              onChange={ (e)=> setData('date', e.target.value)}
+                              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                              placeholder=" - / - / -"
+                            />
+                          </div>
                           <div className="sm:col-span-2">
                             <label
                               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                             >
                               Observación
                             </label>
-                            <InputError message={errors.description} customMessage="Este campo es obligatorio." className='mt-2'/>
+                            {/* <InputError message={errors.description} className='mt-2'/> */}
                             <textarea
                               rows="5"
                               className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                              placeholder="Descripción breve del producto..."
+                              placeholder="Descripción breve de la venta..."
                               value={data.description}
                               onChange={ (e)=> setData('description', e.target.value)}
                               maxLength={60}
@@ -175,7 +292,7 @@ const AddProduct = ({auth}) => {
                             className="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto"
                             disabled = {processing}
                           >
-                            Agregar Producto
+                            Agregar Venta
                           </PrimaryButton>
                           <button
                             type="button"
@@ -199,6 +316,7 @@ const AddProduct = ({auth}) => {
     </Transition.Root>
     </AuthenticatedLayout>
     </>
-  );
+  )
 }
-export default AddProduct
+
+export default AddSale

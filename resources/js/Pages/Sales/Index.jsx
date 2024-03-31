@@ -1,19 +1,18 @@
 import React, { useState  } from "react";
-import AddProduct from "@/Components/AddProduct";
+import AddSale from "@/Components/AddSale";
 import { usePage } from '@inertiajs/react'
-import UpdateProduct from "@/Components/UpdateProduct"; 
+import UpdateSale from "@/Components/UpdateSale"; 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Dialog, Transition } from "@headlessui/react";
-import { router } from '@inertiajs/react'
+import { router } from '@inertiajs/react'  
 
 
-const Index = ({products}) => {
-  console.log('revisar product', products)
+const Index = ({sales, products}) => {
   const {auth} = usePage().props
-  const [selectedProductId, setSelectedProductId] = useState(null);
-  const [selectedProductDeleteId, setSelectedProductDeleteId] = useState(null);
-  const [updateProduct, setUpdateProduct] = useState([]);
-  const [showProductModal, setShowProductModal] = useState(false);
+  const [selectedSaleId, setSelectedSaleId] = useState(null);
+  const [selectedsaleDeleteId, setSelectedSaleDeleteId] = useState(null);
+  const [updateSale, setUpdateSale] = useState([]);
+  const [showSaleModal, setShowSaleModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -22,26 +21,25 @@ const Index = ({products}) => {
    // Modal de confirmación para eliminar un ítem
   const showDeleteConfirmation = (id) => {
     setShowDeleteModal(true);
-    setSelectedProductDeleteId(id); // Set the selected product ID
-    console.log('probndo', selectedProductDeleteId)
+    setSelectedSaleDeleteId(id); // Set the selected sale ID
   }; 
 
-  const deleteProduct = () => {
-    router.delete(`/products/${selectedProductDeleteId}`)
+  const deleteSale = () => {
+    router.delete(`/sales/${selectedsaleDeleteId}`)
     setShowDeleteModal(false);
   }; 
   
   
 
 
-  // Modal for Product ADD
-  const addProductModalSetting = () => {
-    setShowProductModal(prevState => !prevState);
+  // Modal for sale ADD
+  const addSaleModalSetting = () => {
+    setShowSaleModal(prevState => !prevState);
   };
 
-   // Modal for Product UPDATE
-  const updateProductModalSetting = (productId) => {
-    setSelectedProductId(productId);
+   // Modal for sale UPDATE
+  const updateSaleModalSetting = (saleId) => {
+    setSelectedSaleId(saleId);
     setShowUpdateModal(true);
     
     // Lógica para mostrar el modal aquí
@@ -50,16 +48,16 @@ const Index = ({products}) => {
 
 // Handle Search Term
 const handleSearchTerm = (e) => {
-  const term = e.target.value.toLowerCase(); // Convertir el término de búsqueda a minúsculas
+  const term = e.target.value ? e.target.value.toLowerCase() : ''; // Convertir el término de búsqueda a minúsculas
   setSearchTerm(term); // Establecer el término de búsqueda en el estado
 
-  // Filtrar productos basados en el término de búsqueda
-  const filteredProducts = products.filter(product =>
-    product.product.toLowerCase().includes(term)
+  // Filtrar saleos basados en el término de búsqueda
+  const filteredSales = sales.filter(sale =>
+    sale.toLowerCase().includes(term)
   );
 
-  // Actualizar la lista de productos filtrados
-  setFilteredProducts(filteredProducts);
+  // Actualizar la lista de sales filtrados
+  setFilteredSales(filteredSales);
 };
 
 
@@ -69,102 +67,117 @@ const handleSearchTerm = (e) => {
     <div className="col-span-12 lg:col-span-10  flex justify-center">
       <div className=" flex flex-col gap-5 w-11/12">
         <div className="bg-white rounded p-3">
-          <span className="font-bold px-4">Inventario General</span>
-          <div className=" flex flex-col md:flex-row justify-center items-center">
-            <div className="flex flex-col p-10  w-full  md:w-3/12  ">
-              <span className="font-semibold text-blue-600 text-base">
-                Productos
-              </span>
-              <span className="font-semibold text-gray-600 text-base">
-                {products.length}
-              </span>
-              <span className="font-thin text-gray-400 text-xs">
-                Todos los productos
-              </span>
-            </div>
-            <div className="flex flex-col gap-3 p-10   w-full  md:w-3/12 sm:border-y-2  md:border-x-2 md:border-y-0">
-              <span className="font-semibold text-green-600 text-base">
-                Stock Total
-              </span>
-              <div className="flex gap-8">
-                <div className="flex flex-col">
-                  <span className="font-semibold text-gray-600 text-base">
-                   {/* {calcularUnidadesTotalesStock()}  */}
-                  </span>
-                  <span className="font-thin text-gray-400 text-xs">
-                    Stock
-                  </span>
+            <span className="font-bold px-4">Control de Ventas</span>
+            <div className=" flex flex-col md:flex-row justify-center items-center">
+                <div className="flex flex-col p-10  w-full  md:w-3/12  ">
+                <span className="font-semibold text-blue-600 text-base">
+                    Top 10 Últimos 30 días
+                </span>
+                <span className="font-semibold text-gray-600 text-2xl">
+                #1 Remeras
+                </span>
+                <span className="font-semibold text-gray-600 text-xl">
+                #2 Gorras
+                </span>
+                <span className="font-semibold text-gray-600 text-lg">
+                #3 Almohadones
+                </span>
+                <span className="font-semibold text-gray-600 text-base">
+                #4 Parches
+                </span>
+                <span className="font-semibold text-gray-600 text-xs">
+                #5 Otro, #6 Otro, #7 Otro, <br/>
+                #8 Otro, #9 Otro, #10 Otro.
+                </span>
+                
+                <span className="font-thin text-gray-400 text-xs">
+                    Productos más vendidos del Mes
+                </span>
                 </div>
-                <div className="flex flex-col">
-                  <span className="font-semibold text-gray-600 text-base">
-                     {/* ${calcularValorTotalStock()}   */}
-                  </span>
-                  <span className="font-thin text-gray-400 text-xs">
-                    Valor
-                  </span>
+                <div className="flex flex-col gap-3 p-10   w-full  md:w-3/12 sm:border-y-2  md:border-x-2 md:border-y-0">
+                <span className="font-semibold text-green-600 text-base">
+                    Stock Total
+                </span>
+                <div className="flex gap-8">
+                    <div className="flex flex-col">
+                    <span className="font-semibold text-gray-600 text-base">
+                    {/* {totalStockUp}  */}
+                    </span>
+                    <span className="font-thin text-gray-400 text-xs">
+                        Suma de stock
+                    </span>
+                    </div>
+                    <div className="flex flex-col">
+                    <span className="font-semibold text-gray-600 text-base">
+                        {/* ${totalPriceUp}  */}
+                    </span>
+                    <span className="font-thin text-gray-400 text-xs">
+                        Valor Total
+                    </span>
+                    </div>
                 </div>
-              </div>
-            </div>
-            <div className="flex flex-col gap-3 p-10  w-full  md:w-3/12  border-y-2  md:border-x-2 md:border-y-0">
-              <span className="font-semibold text-yellow-600 text-base">
-                Stock Bajo
-              </span>
-              <div className="flex gap-8">
-                <div className="flex flex-col">
-                  <span className="font-semibold text-yellow-600 text-base">
-                  {/* {contarUnidadesPorEstado("Stock Bajo")}  */}
-                  </span>
-                  <span className="font-thin text-gray-400 text-xs">
+                </div>
+                <div className="flex flex-col gap-3 p-10  w-full  md:w-3/12  border-y-2  md:border-x-2 md:border-y-0">
+                <span className="font-semibold text-yellow-600 text-base">
                     Stock Bajo
-                  </span>
+                </span>
+                <div className="flex gap-8">
+                    <div className="flex flex-col">
+                    <span className="font-semibold text-yellow-600 text-base">
+                    {/* {countProductsLowStock}  */}
+                    </span>
+                    <span className="font-thin text-gray-400 text-xs">
+                        Stock Bajo
+                    </span>
+                    </div>
+                    <div className="flex flex-col">
+                    <span className="font-semibold text-red-600 text-base">
+                    {/* {countProductsNoStock}  */}
+                    </span>
+                    <span className="font-thin text-gray-400 text-xs">
+                        Sin Stock
+                    </span>
+                    </div>
                 </div>
-                <div className="flex flex-col">
-                  <span className="font-semibold text-red-600 text-base">
-                  {/* {contarUnidadesPorEstado("Sin Stock")} */}
-                  </span>
-                  <span className="font-thin text-gray-400 text-xs">
-                    Sin Stock
-                  </span>
                 </div>
-              </div>
+                <div className="flex flex-col gap-3 p-10  w-full  md:w-3/12  border-y-2  md:border-x-2 md:border-y-0">
+                <span className="font-semibold text-red-600 text-base">
+                    Sin Definir
+                </span>
+                <div className="flex gap-8">
+                    <div className="flex flex-col">
+                    <span className="font-semibold text-gray-600 text-base">
+                        0
+                    </span>
+                    <span className="font-thin text-gray-400 text-xs">
+                        Ordenado
+                    </span>
+                    </div>
+                    <div className="flex flex-col">
+                    <span className="font-semibold text-gray-600 text-base">
+                        0
+                    </span>
+                    <span className="font-thin text-gray-400 text-xs">
+                        Sin Stock
+                    </span>
+                    </div>
+                </div>
+                </div>
             </div>
-            <div className="flex flex-col gap-3 p-10  w-full  md:w-3/12  border-y-2  md:border-x-2 md:border-y-0">
-              <span className="font-semibold text-red-600 text-base">
-                Sin Definir
-              </span>
-              <div className="flex gap-8">
-                <div className="flex flex-col">
-                  <span className="font-semibold text-gray-600 text-base">
-                    0
-                  </span>
-                  <span className="font-thin text-gray-400 text-xs">
-                    Ordenado
-                  </span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-semibold text-gray-600 text-base">
-                    0
-                  </span>
-                  <span className="font-thin text-gray-400 text-xs">
-                    Sin Stock
-                  </span>
-                </div>
-              </div>
             </div>
-          </div>
-        </div>
 
 
-        {showProductModal && (
-          <AddProduct
-            addProductModalSetting={addProductModalSetting}
+        {showSaleModal && (
+          <AddSale
+            addSaleModalSetting={addSaleModalSetting}
+            products={products}
           />
         )}
         {showUpdateModal && (
-           <UpdateProduct
-            productId={selectedProductId}
-            productData={updateProduct}
-            updateModalSetting={updateProductModalSetting}
+           <UpdateSale
+            saleId={selectedSaleId}
+            saleData={updateSale}
+            updateModalSetting={updateSaleModalSetting}
           /> 
           )}
 
@@ -201,7 +214,7 @@ const handleSearchTerm = (e) => {
                                 <button
                                 type="button"
                                 className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 mr-3"
-                                onClick={() => deleteProduct(selectedProductId)}
+                                onClick={() => deleteSale(selectedSaleId)}
                                 >
                                 Eliminar
                                 </button>
@@ -249,16 +262,16 @@ const handleSearchTerm = (e) => {
             <div className="flex gap-4">
               <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold p-2 text-xs  rounded"
-                onClick={addProductModalSetting}
+                onClick={addSaleModalSetting}
                 
               >
-                Agregar Producto
+                Agregar Venta
               </button>
               
             </div>
           </div>
           <table className="min-w-full divide-y-2 divide-gray-200 text-sm">
-            <thead>
+          <thead>
               <tr>
                 <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
                   Producto
@@ -267,19 +280,28 @@ const handleSearchTerm = (e) => {
                   Diseño
                 </th>
                 <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                  Stock
+                  Cliente
+                </th>
+                <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
+                  Canal de Venta
+                </th>
+                <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
+                  Método de Pago
+                </th>
+                <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
+                  Und
                 </th>
                 <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
                   Precio
                 </th>
                 <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                 Valor/total
+                  Total $
                 </th>
                 <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                Observación
+                  Fecha
                 </th>
                 <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                  Disponible?
+                  Observación
                 </th>
                 <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
                   Acción
@@ -288,98 +310,56 @@ const handleSearchTerm = (e) => {
             </thead>
 
             <tbody className="divide-y divide-gray-200">
-                {products.map(product => (
-                  <tr key={product.id}> 
-                    <td className="whitespace-nowrap px-4 py-2  text-gray-900">
-                     {product.product}
+                {sales.map(sale => (                    
+                  <tr key={sale.id}> 
+                     <td className="whitespace-nowrap px-4 py-2  text-gray-900">
+                     {sale.product}
+                     {products.find(product => product.id === sale.product)?.name}
                     </td>
                     <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                    {product.designs && product.designs.length > 0 ? (
-                      product.designs.map(design => (
-                        <div key={design.id}>
-                            {design.design}
-                        </div>
-                    ))
-                ) : (
-                    'No Design'
-                )}
+                    {sale.design}
                     </td>
                     <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                    {product.designs && product.designs.length > 0 ? (
-                    product.designs.map(design => (
-                        <div key={design.id}>
-                            {design.stock}
-                        </div>
-                    ))
-                ) : (
-                    'No Stock'
-                )}
+                    {sale.client}
                     </td>
                     <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                    {product.designs && product.designs.length > 0 ? (
-                    product.designs.map(design => (
-                        <div key={design.id}>
-                            {design.price}
-                        </div>
-                    ))
-                ) : (
-                    'No Price'
-                )}
+                    {sale.saleschannel}
                     </td>
                     <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                    {product.designs && product.designs.length > 0 ? (
-                    product.designs.map(design => (
-                        <div key={design.id}>
-                            {design.price * design.stock}
-                        </div>
-                    ))
-                ) : (
-                    'N/A'
-                )}
+                    {sale.methodpay}
                     </td>
                     <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                    {product.designs && product.designs.length > 0 ? (
-                    product.designs.map(design => (
-                        <div key={design.id}>
-                            {design.description}
-                        </div>
-                    ))
-                ) : (
-                    'No Description'
-                )}
+                    {sale.stock}
                     </td>
                     <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                    {product.designs && product.designs.length > 0 ? (
-                    product.designs.map(design => (
-                        <div key={design.id}>
-                            {design.stock > 0 && design.stock <= 3 ? "Stock Bajo 🔰" : design.stock > 3 ? "Stock ✅" : 'Sin Stock ❗'}
-                        </div>
-                    ))
-                ) : (
-                    'No Stock Status'
-                )}
+                    ${sale.price}
                     </td>
                     <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-
-                      <button
+                    ${sale.price * sale.stock}
+                    </td>
+                    <td className="whitespace-nowrap px-4 py-2 text-gray-700">
+                    {sale.date}
+                    </td>
+                    <td className="whitespace-nowrap px-4 py-2 text-gray-700">
+                    {sale.description}
+                    </td>
+                    <td className="whitespace-nowrap px-4 py-2 text-gray-700">
+                      <span
                         className="text-green-700 cursor-pointer"
                         onClick={() => {
-                          
-                          setSelectedProductId(product.id);
+                          setSelectedSaleId(sale.id);
                           setShowUpdateModal(true);
-                          setUpdateProduct(product); 
+                          setUpdateSale();
                         }}
                       >
                         Editar{" "}
-                      </button>
-                    
+                      </span>
                       <span
                         className="text-red-600 px-2 cursor-pointer"
-                        onClick={() => showDeleteConfirmation(product.id)}
+                        onClick={() => showDeleteConfirmation(sale.id)}
                       >
                         Borrar
                       </span>
-                      
                     </td>
                   </tr>
                   

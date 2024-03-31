@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SaleController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -30,10 +31,9 @@ Route::get('/', function () {
 Route::middleware('auth')->group(function () {
     Route::resource('products', ProductController::class)
         ->only(['index', 'store', 'update', 'destroy']);
-    
-   // Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
 
-    // Otras rutas protegidas por autenticación
+    Route::resource('sales', SaleController::class)
+    ->only(['index', 'store', 'update', 'destroy']);
 });
 
 
