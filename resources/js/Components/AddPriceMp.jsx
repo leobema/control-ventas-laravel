@@ -6,21 +6,18 @@ import { useForm } from '@inertiajs/react'
 import { PlusIcon } from "@heroicons/react/24/outline";
 import PrimaryButton from "./PrimaryButton";
 
-const AddProduct = ({auth}) => { 
+const AddPriceMp = ({auth}) => { 
     const {data, setData, post, processing, reset, errors} = useForm({
-      product: '',
-      design: '',
+      name: '',
       price: '',
-      stock: '',
-      description: '',
     })
 
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(true); 
     const cancelButtonRef = useRef(null);
 
     const submit =  (e) => {
         e.preventDefault()
-        post(route('products.store'), {onSuccess: ()=> reset()} );
+        post(route('dbpriceitems.store'), {onSuccess: ()=> reset()} );
         window.location.reload(); 
     } 
   
@@ -73,7 +70,7 @@ const AddProduct = ({auth}) => {
                         as="h3"
                         className="text-lg font-semibold leading-6 text-gray-900 "
                       >
-                        Agregar Producto
+                        Agregar Item
                       </Dialog.Title>
                       <form onSubmit={submit}>
                         <div className="grid grid-flow-row gap-4 mb-4 mt-4 sm:grid-cols-2">
@@ -83,51 +80,14 @@ const AddProduct = ({auth}) => {
                             >
                               Producto
                             </label>
-                            <InputError message={errors.product} customMessage="Este campo es obligatorio." className='mt-2'/>
+                            <InputError message={errors.name} customMessage="Este campo es obligatorio." className='mt-2'/>
                             <input
                               type="text"
-                              value={data.product}
-                              onChange={ (e)=> setData('product', e.target.value)}
+                              value={data.name}
+                              onChange={ (e)=> setData('name', e.target.value)}
                               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                              placeholder="Ej. Remera"
+                              placeholder="Ej. Tela Microtull"
                             />
-                          </div>
-                        </div>
-                        <div className="grid grid-flow-row gap-4 my-4 grid-cols-2">
-                          <div className="col-span-2">
-                              <div className="grid gap-4 my-2 grid-cols-2">
-                                <div>
-                                  <label
-                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                  >
-                                    Diseño 
-                                  </label>
-                                  <InputError message={errors.design} customMessage="Este campo es obligatorio." className='mt-2'/>
-                                  <input
-                                    type="text"
-                                    value={data.design}
-                                    onChange={ (e)=> setData('design', e.target.value)}
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                    placeholder="Ej. Sonic"
-                                  />
-                                </div>
-
-                                <div>
-                                  <label
-                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                  >
-                                    Stock 
-                                  </label>
-                                  <InputError message={errors.stock} customMessage="Este campo es obligatorio." className='mt-2'/>
-                                  <input
-                                    type="number"
-                                    value={data.stock}
-                                    onChange={ (e)=> setData('stock', e.target.value)}
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                    placeholder="0 - 999"
-                                  />
-                                </div>
-                              </div>
                           </div>
                         </div>
                         <div className="grid gap-4 mb-4 sm:grid-cols-2">
@@ -146,35 +106,13 @@ const AddProduct = ({auth}) => {
                               placeholder="$299"
                             />
                           </div>
-                          <div className="sm:col-span-2">
-                            <label
-                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                            >
-                              Observación
-                            </label>
-                            <InputError message={errors.description} customMessage="Este campo es obligatorio." className='mt-2'/>
-                            <textarea
-                              rows="5"
-                              className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                              placeholder="Descripción breve del producto..."
-                              value={data.description}
-                              onChange={ (e)=> setData('description', e.target.value)}
-                              maxLength={60}
-                            >
-                              Standard glass, 3.8GHz 8-core 10th-generation
-                              Intel Core i7 processor, Turbo Boost up to 5.0GHz,
-                              16GB 2666MHz DDR4 memory, Radeon Pro 5500 XT with
-                              8GB of GDDR6 memory, 256GB SSD storage, Gigabit
-                              Ethernet, Magic Mouse 2, Magic Keyboard - US
-                            </textarea>
-                          </div>
                         </div>
                         <div className=" px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                           <PrimaryButton
                             className="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto"
                             disabled = {processing}
                           >
-                            Agregar Producto
+                            Agregar Item
                           </PrimaryButton>
                           <button
                             type="button"
@@ -200,4 +138,4 @@ const AddProduct = ({auth}) => {
     </>
   );
 }
-export default AddProduct
+export default AddPriceMp

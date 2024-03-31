@@ -8,7 +8,6 @@ import { router } from '@inertiajs/react'
 
 
 const Index = ({products}) => {
-  console.log('revisar product', products)
   const {auth} = usePage().props
   const [selectedProductId, setSelectedProductId] = useState(null);
   const [selectedProductDeleteId, setSelectedProductDeleteId] = useState(null);
@@ -23,7 +22,6 @@ const Index = ({products}) => {
   const showDeleteConfirmation = (id) => {
     setShowDeleteModal(true);
     setSelectedProductDeleteId(id); // Set the selected product ID
-    console.log('probndo', selectedProductDeleteId)
   }; 
 
   const deleteProduct = () => {

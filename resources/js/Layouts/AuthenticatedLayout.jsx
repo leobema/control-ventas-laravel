@@ -28,6 +28,18 @@ export default function Authenticated({ user, header, children }) {
                                     Estadística
                                 </NavLink>
                                 <NavLink 
+                                href={route('dbpriceitems.index')} 
+                                active={route().current('dbpriceitems.index')}
+                                >
+                                    Precios Items 
+                                </NavLink>
+                                <NavLink 
+                                href={route('purchase.index')} 
+                                active={route().current('purchase.index')}
+                                >
+                                    Control Productos 
+                                </NavLink>
+                                <NavLink 
                                 href={route('products.index')} 
                                 active={route().current('products.index')}
                                 >

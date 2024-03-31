@@ -17,6 +17,7 @@ const Index = ({sales, products}) => {
   const [searchTerm, setSearchTerm] = useState();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
+ 
 
    // Modal de confirmación para eliminar un ítem
   const showDeleteConfirmation = (id) => {
@@ -46,6 +47,7 @@ const Index = ({sales, products}) => {
   }; 
 
 
+
 // Handle Search Term
 const handleSearchTerm = (e) => {
   const term = e.target.value ? e.target.value.toLowerCase() : ''; // Convertir el término de búsqueda a minúsculas
@@ -59,6 +61,8 @@ const handleSearchTerm = (e) => {
   // Actualizar la lista de sales filtrados
   setFilteredSales(filteredSales);
 };
+
+console.log('sales', sales)
 
 
   return (

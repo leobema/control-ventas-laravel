@@ -2,12 +2,14 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\DbitemspriceController;
+use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\SaleController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-
+ 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -33,6 +35,12 @@ Route::middleware('auth')->group(function () {
         ->only(['index', 'store', 'update', 'destroy']);
 
     Route::resource('sales', SaleController::class)
+    ->only(['index', 'store', 'update', 'destroy']);
+
+    Route::resource('purchase', PurchaseController::class)
+    ->only(['index', 'store', 'update', 'destroy']);
+
+    Route::resource('dbpriceitems', DbitemspriceController::class)
     ->only(['index', 'store', 'update', 'destroy']);
 });
 
