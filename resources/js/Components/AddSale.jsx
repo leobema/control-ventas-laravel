@@ -10,12 +10,16 @@ const AddSale = ({auth, products}) => {
   const [selectedProductName, setSelectedProductName] = useState('');
   const [availableDesigns, setAvailableDesigns] = useState([]);
   const [selectedAvailableDesign, setSelectedAvailableDesign] = useState(null);
+  const [selectedDesignName, setSelectedDesignName] = useState('');
+
+  
+  
 
   const uniqueProductNames = [...new Set(products.map(product => product.product))]; 
   
   const initialFormData = {
     product: selectedProductName,
-    design: '',
+    design: selectedDesignName,
     client: '',
     stock: '',
     saleschannel: '',
@@ -29,9 +33,21 @@ const {data, setData, post, processing, reset, errors} = useForm(initialFormData
 
 useEffect(() => {
   if (selectedAvailableDesign) {
-    setData('design', selectedAvailableDesign ? selectedAvailableDesign.design : '');
+    setData('design', selectedAvailableDesign ? selectedAvailableDesign.id : '');
   }
 }, [selectedAvailableDesign]);
+
+useEffect(() => {
+  if (selectedAvailableDesign) {
+    setData(prevData => ({
+      ...prevData,
+      design: selectedAvailableDesign.design,
+    }));
+    //setAvailableDesigns([]);
+    setSelectedAvailableDesign(selectedAvailableDesign);
+  }
+}, [selectedAvailableDesign]);
+
 
 const handleProductChange = (e) => {
   const selectedProductName = e.target.value;
@@ -46,19 +62,21 @@ const handleDesignChange = (e) => {
   const selectedDesignId = parseInt(e.target.value);
   const selectedDesign = availableDesigns.find(design => design.id === selectedDesignId);
   setSelectedAvailableDesign(selectedDesign);
+  setSelectedDesignName(selectedDesign ? selectedDesign.design : '');
+  console.log('selectedDesign', selectedDesign)
   setData('design', selectedDesign ? selectedDesign.design : '');
 };
 
 const [open, setOpen] = useState(true);
 const cancelButtonRef = useRef(null);
 
+
 const submit = (e) => {
   e.preventDefault();
-  const selectedDesignName = selectedAvailableDesign ? selectedAvailableDesign.design : '';
+  console.log('data', data)
    post(route('sales.store'), { 
-    design: selectedDesignName,
     onSuccess: () => reset() 
-  }); 
+  });  
 };
 
   
@@ -154,7 +172,7 @@ const hasProductError = errors && errors.product;
                                   <select
                                     //value={selectedDesign.design}
                                     //value={data.design}
-                                    value={data.design}
+                                    value=""
                                     onChange={handleDesignChange}  
                                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                   >
@@ -169,7 +187,12 @@ const hasProductError = errors && errors.product;
                                   </select>
                                   
                                 </div> 
-
+                                  <div className="col-span-2">
+                                      <input 
+                                      value={data.design}
+                                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                      />
+                                  </div>   
                                 <div>
                                   <label
                                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"

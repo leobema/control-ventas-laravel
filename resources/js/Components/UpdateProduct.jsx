@@ -3,10 +3,10 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import { Dialog, Transition } from "@headlessui/react";
 import InputError from '@/Components/InputError'
 import { useForm, usePage } from '@inertiajs/react'
-import { ArrowLongUpIcon } from "@heroicons/react/24/outline";
+import { ArrowLongUpIcon } from "@heroicons/react/24/outline"; 
 import PrimaryButton from "./PrimaryButton";
 
-const UpdateProduct = ({productId, productData, updateModalSetting}) => {
+const UpdateProduct = ({productId, productData}) => {
     const {auth} = usePage().props
     //const [editing, setEditing] = useState(false)
     const {data, setData, patch, processing, reset, errors} = useForm({

@@ -349,7 +349,7 @@ const handleSearchTerm = (e) => {
                         onClick={() => {
                           setSelectedSaleId(sale.id);
                           setShowUpdateModal(true);
-                          setUpdateSale();
+                          setUpdateSale(sale);
                         }}
                       >
                         Editar{" "}
