@@ -1,5 +1,4 @@
 import { Fragment, useRef, useState } from "react";
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import { Dialog, Transition } from "@headlessui/react";
 import InputError from '@/Components/InputError'
 import { useForm, usePage } from '@inertiajs/react'
@@ -7,7 +6,6 @@ import { ArrowLongUpIcon } from "@heroicons/react/24/outline";
 import PrimaryButton from "./PrimaryButton";
 
 const UpdateSale = ({updatePricetData}) => {
-  const {auth} = usePage().props
   const { data, setData, patch, processing, reset, errors } = useForm({
     name: updatePricetData.name,
     price: updatePricetData.price,
@@ -20,7 +18,11 @@ const cancelButtonRef = useRef(null);
 
 const submit = (e) => {
     e.preventDefault()
-    patch(route('dbpriceitems.update', { dbpriceitem: updatePricetData.id }), {onSuccess: ()=> reset()} );
+    patch(route('dbpriceitems.update', { dbpriceitem: updatePricetData.id }), {onSuccess: ()=> {
+      reset(); 
+      setOpen(false);
+    }
+  } );
     window.location.reload();
 } 
 
@@ -28,7 +30,6 @@ const submit = (e) => {
   return (
     // Modal
     <>
-    <AuthenticatedLayout auth={auth}>
     <Transition.Root show={open} as={Fragment}>
       <Dialog
         as="div"
@@ -119,8 +120,7 @@ const submit = (e) => {
                           <button
                             type="button"
                             className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                            //onClick={() => setOpen(false)}
-                            onClick={() => window.location.reload()}  
+                            onClick={() => setOpen(false)}
                           >
                             Cancelar
                           </button>
@@ -136,7 +136,6 @@ const submit = (e) => {
         </div>
       </Dialog>
     </Transition.Root>
-    </AuthenticatedLayout>
     </>
   )
 }

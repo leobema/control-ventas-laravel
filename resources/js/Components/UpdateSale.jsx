@@ -1,13 +1,11 @@
 import { Fragment, useRef, useState } from "react";
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
-import { Dialog, Transition } from "@headlessui/react";
+import { Dialog, Transition } from "@headlessui/react"; 
 import InputError from '@/Components/InputError'
-import { useForm, usePage } from '@inertiajs/react'
+import { useForm } from '@inertiajs/react'
 import { ArrowLongUpIcon } from "@heroicons/react/24/outline"; 
 import PrimaryButton from "./PrimaryButton";
 
-const UpdateSale = ({saleData}) => {
-  const {auth} = usePage().props
+const UpdateSale = ({ saleData }) => {
   const { data, setData, patch, processing, reset, errors } = useForm({
     product: saleData.product,
     design: saleData.design,
@@ -27,15 +25,16 @@ const cancelButtonRef = useRef(null);
 
 const submit = (e) => {
     e.preventDefault()
-    patch(route('sales.update', { sale: saleData.id }), {onSuccess: ()=> reset()} );
-    window.location.reload();
+    patch(route('sales.update', { sale: saleData.id }), {onSuccess: ()=> {
+      reset(); 
+      setOpen(false);
+    }
+  });
 } 
-
 
   return (
     // Modal
     <>
-    <AuthenticatedLayout auth={auth}>
     <Transition.Root show={open} as={Fragment}>
       <Dialog
         as="div"
@@ -137,11 +136,9 @@ const submit = (e) => {
                                   </label>
                                   <InputError message={errors.stock} className='mt-2'/> 
                                   <input
-                                    type="number"
+                                    disabled
                                     value={data.stock}
-                                    onChange={ (e)=> setData('stock', e.target.value)}
                                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                    placeholder="0 - 999"
                                   />
                                 </div>
                                 <div>
@@ -241,8 +238,7 @@ const submit = (e) => {
                           <button
                             type="button"
                             className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                            //onClick={() => setOpen(false)}
-                            onClick={() => window.location.reload()}  
+                            onClick={() => setOpen(false)}
                           >
                             Cancelar
                           </button>
@@ -258,7 +254,6 @@ const submit = (e) => {
         </div>
       </Dialog>
     </Transition.Root>
-    </AuthenticatedLayout>
     </>
   )
 }

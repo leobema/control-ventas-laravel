@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers; 
 
 use App\Models\Purchase;
 use App\Models\Dbpriceitem;
@@ -51,7 +51,7 @@ class PurchaseController extends Controller
         ]);
     
         $purchase->update($validatedData);
-        return $purchase;
+        return redirect(route('purchases.index'));
     }
 
     /**

@@ -1,14 +1,11 @@
 import { Fragment, useRef, useState } from "react";
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import { Dialog, Transition } from "@headlessui/react";
 import InputError from '@/Components/InputError'
-import { useForm, usePage } from '@inertiajs/react'
+import { useForm } from '@inertiajs/react'
 import { ArrowLongUpIcon } from "@heroicons/react/24/outline"; 
 import PrimaryButton from "./PrimaryButton";
 
 const UpdateProduct = ({productId, productData}) => {
-    const {auth} = usePage().props
-    //const [editing, setEditing] = useState(false)
     const {data, setData, patch, processing, reset, errors} = useForm({
         product: productData.product,
         design: productData.designs && productData.designs.length > 0
@@ -30,15 +27,17 @@ const UpdateProduct = ({productId, productData}) => {
 
     const submit = (e) => {
         e.preventDefault()
-        patch(route('products.update', {product: productId}), {onSuccess: ()=> reset()} );
-        window.location.reload();
+        patch(route('products.update', {product: productId}), {onSuccess: ()=> {
+          reset(); 
+          setOpen(false);
+        }
+      });
     } 
   
 
   return (
     // Modal
     <>
-    <AuthenticatedLayout auth={auth}>
     <Transition.Root show={open} as={Fragment}>
       <Dialog
         as="div"
@@ -192,9 +191,8 @@ const UpdateProduct = ({productId, productData}) => {
                           <button
                             type="button"
                             className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                            onClick={()=> window.location.reload()}
+                            onClick={() => setOpen(false)} 
                           >
-                            
                             Cancelar
                           </button>
                         </div>
@@ -210,7 +208,6 @@ const UpdateProduct = ({productId, productData}) => {
         </div>
       </Dialog>
     </Transition.Root>
-    </AuthenticatedLayout>
     </>
   );
 }

@@ -32,24 +32,17 @@ export default function Welcome({ auth }) {
 <Head title="Login" />
     <div className="grid grid-cols-1 sm:grid-cols-2 h-screen  items-center place-items-center">
         <div className="flex justify-center">
-            <svg 
-            width="36" 
-            height="36" 
-            xmlns="http://www.w3.org/2000/svg" 
-            >
-                <path d="M16 2v7h-2v-5h-12v16h12v-5h2v7h-16v-20h16zm2 9v-4l6 5-6 5v-4h-10v-2h10z"/>
-                </svg>
+            <img 
+            className='mx-auto w-auto'
+            src="https://img.freepik.com/vector-gratis/gerente-recursos-humanos-empleado-entrevista-diagrama-flujo-empresarial-software-evaluacion-empleados-sistema-empresa-recursos-humanos-ilustracion-concepto-programa-verificacion-empleados_335657-2088.jpg?w=1380&t=st=1712004475~exp=1712005075~hmac=e9510a26d2ffe007b6bdcbc63794e8c278301a813bc60ade742b8b681b2cd61c" 
+            />
         </div>
         <div className="w-full max-w-md space-y-8 p-10 rounded-lg">
           <div>
-              <svg 
-              
-              viewBox="0 0 24 24" 
-              xmlns="http://www.w3.org/2000/svg">
-                <path 
-                d="m21.301 4c.411 0 .699.313.699.663 0 .248-.145.515-.497.702-1.788.948-3.858 4.226-3.858 6.248 3.016-.092 4.326 2.582 4.326 4.258 0 2.007-1.738 4.129-4.308 4.129-3.24 0-4.83-2.547-4.83-5.307 0-5.98 6.834-10.693 8.468-10.693zm-10.833 0c.41 0 .699.313.699.663 0 .248-.145.515-.497.702-1.788.948-3.858 4.226-3.858 6.248 3.016-.092 4.326 2.582 4.326 4.258 0 2.007-1.739 4.129-4.308 4.129-3.241 0-4.83-2.547-4.83-5.307 0-5.98 6.833-10.693 8.468-10.693z" 
-                />
-                </svg>
+              <img 
+              className='mx-auto w-auto'
+              src="https://logovectorseek.com/wp-content/uploads/2023/04/control-com-logo-vector.png"
+            />
             <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
               Signin to your account
             </h2>

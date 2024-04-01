@@ -226,21 +226,24 @@ export default function Dashboard({ auth }) {
                 name=""
               />
       </div>
-        <div className="flex flex-col bg-white rounded-lg py-8 col-span-full justify-center">
-          <div className="sm:w-[200px] w-full">
-            <Chart className="sm:w-[200px] w-full"
-              options={chart.options}
-              series={chart.series}
-              type="bar"
-              width="300"
-            />
-          </div>
-          <div className="flex flex-col bg-white rounded-lg py-8 col-span-full justify-center">
-          <div className="w-full max-w-md"> {/* Ajusta el ancho máximo según tus necesidades */}
+        <div className="grid grid-cols-4 w-full bg-white rounded-lg py-8 col-span-full justify-center">
+        <div className="grid grid-cols-1 w-full max-h-md">
+              <Chart 
+                  options={chart.options}
+                  series={chart.series}
+                  type="bar"
+                  height="100%"
+                />
+            </div>
+          
+         
+          <div className="grid grid-cols-2 w-full max-w-md">
   
             <Doughnut data={data} />
+            
           </div>
-        </div>
+           
+
       </div>
       </div>
         </AuthenticatedLayout>

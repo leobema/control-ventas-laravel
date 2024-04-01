@@ -1,12 +1,11 @@
 import { Fragment, useRef, useState } from "react";
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import { Dialog, Transition } from "@headlessui/react";
 import InputError from '@/Components/InputError'
 import { useForm } from '@inertiajs/react'
 import { PlusIcon } from "@heroicons/react/24/outline";
 import PrimaryButton from "./PrimaryButton";
 
-const AddPriceMp = ({auth}) => { 
+const AddPriceMp = () => { 
     const {data, setData, post, processing, reset, errors} = useForm({
       name: '',
       price: '',
@@ -17,15 +16,18 @@ const AddPriceMp = ({auth}) => {
 
     const submit =  (e) => {
         e.preventDefault()
-        post(route('dbpriceitems.store'), {onSuccess: ()=> reset()} );
-        window.location.reload(); 
+        post(route('dbpriceitems.store'), {onSuccess: ()=> {
+          reset(); 
+          setOpen(false);
+        }
+      });
+        
     } 
   
 
   return (
     // Modal
     <>
-    <AuthenticatedLayout auth={auth}>
     <Transition.Root show={open} as={Fragment}>
       <Dialog
         as="div"
@@ -69,7 +71,7 @@ const AddPriceMp = ({auth}) => {
                       <Dialog.Title
                         as="h3"
                         className="text-lg font-semibold leading-6 text-gray-900 "
-                      >
+                      > 
                         Agregar Item
                       </Dialog.Title>
                       <form onSubmit={submit}>
@@ -117,8 +119,7 @@ const AddPriceMp = ({auth}) => {
                           <button
                             type="button"
                             className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                            //onClick={() => setOpen(false)}
-                            onClick={() => window.location.reload()}  
+                            onClick={() => setOpen(false)} 
                           >
                             Cancelar
                           </button>
@@ -134,7 +135,6 @@ const AddPriceMp = ({auth}) => {
         </div>
       </Dialog>
     </Transition.Root>
-    </AuthenticatedLayout>
     </>
   );
 }

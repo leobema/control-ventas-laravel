@@ -1,22 +1,14 @@
 import { Fragment, useRef, useState, useEffect } from "react";
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import { Dialog, Transition } from "@headlessui/react";
 import InputError from '@/Components/InputError'
 import { useForm } from '@inertiajs/react'
 import { PlusIcon } from "@heroicons/react/24/outline";
 import PrimaryButton from "./PrimaryButton";
 
-const AddPurchase = ({auth, dbpriceitems}) => {
-  const [availableDesigns, setAvailableDesigns] = useState([]);
-  const [selectedAvailableDesign, setSelectedAvailableDesign] = useState(null);
+const AddPurchase = ({dbpriceitems}) => {
   const [selectedDesignName, setSelectedDesignName] = useState('');
   const [selectedItemPrice, setSelectedItemPrice] = useState('');
 
-  
-  
-
-  //const uniqueProductNames = [...new Set(products.map(product => product.product))]; 
-  
   const initialFormData = {
     name: selectedDesignName,
     price: selectedItemPrice,
@@ -27,34 +19,11 @@ const AddPurchase = ({auth, dbpriceitems}) => {
 
 const {data, setData, post, processing, reset, errors} = useForm(initialFormData);
 
-console.log('data.price', data.price)
-
-/* useEffect(() => {
-  if (selectedDesignName) {
-    setData('name', selectedDesignName);
-  }
-}, [selectedDesignName]); */
-
 useEffect(() => {
   if (selectedItemPrice) {
     setData('price', selectedItemPrice);
   }
 }, [selectedItemPrice]);
-
-console.log('selectedItemPrice', selectedItemPrice)
-console.log('selectedName', selectedDesignName)
-
-
-/* useEffect(() => {
-  if (selectedAvailableDesign) {
-    setData(prevData => ({
-      ...prevData,
-      design: selectedAvailableDesign.design,
-    }));
-    //setAvailableDesigns([]);
-    setSelectedAvailableDesign(selectedAvailableDesign);
-  }
-}, [selectedAvailableDesign]); */ 
 
 
 const handleNameChange = (e) => {
@@ -62,33 +31,23 @@ const handleNameChange = (e) => {
   const selectedItem = dbpriceitems.find(item => item.name === selectedProductId);
   if (selectedItem) {
     setSelectedDesignName(selectedItem.name);
-    setSelectedItemPrice(selectedItem.price); // Establecer el precio del producto seleccionado
+    setSelectedItemPrice(selectedItem.price); 
     setData('name', selectedItem.name)
-    //setData('price', selectedItem.price); // Establecer el precio en el formulario
-    //setData('price', selectedItem ? selectedItem.price : ''); // Establecer el precio en el formulario
-
-    
   } 
-  console.log('selectedItem', selectedItem)
 };
 
-/* const handleItemChange = (e) => {
-  const selectedItemId = e.target.value;
-  const selectedItemPrice = dbpriceitems.filter(item => item.id === selectedItemId);
-    setSelectedAvailableDesign(selectedItem);
-    setSelectedItemPrice(selectedItem.price); // Actualizar el precio seleccionado
-    setData('price', selectedItem.price); // Establecer el precio en el formulario
-  
-}; */
 
 const [open, setOpen] = useState(true);
-const cancelButtonRef = useRef(null);
+const cancelButtonRef = useRef(null); 
 
 
 const submit = (e) => {
   e.preventDefault();
    post(route('purchases.store'), { 
-    onSuccess: () => reset() 
+    onSuccess: () => {
+      reset(); 
+      setOpen(false);
+    }
   });  
 };
 
@@ -98,7 +57,6 @@ const hasProductError = errors && errors.product;
   return (
     // Modal
     <>
-    <AuthenticatedLayout auth={auth}>
     <Transition.Root show={open} as={Fragment}>
       <Dialog
         as="div"
@@ -156,7 +114,6 @@ const hasProductError = errors && errors.product;
                               <InputError message={hasProductError ? errors.product : null} className='mt-2'/> 
                             <select
                               value={data.name}
-                              //value={selectedProductName}
                               onChange={handleNameChange} 
                               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                             >
@@ -183,7 +140,6 @@ const hasProductError = errors && errors.product;
                                     value={`$${data.price}`}
                                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                   />
-
                                 </div>   
                                 <div>
                                   <label
@@ -191,7 +147,7 @@ const hasProductError = errors && errors.product;
                                   >
                                     Cant
                                   </label>
-                                  {/* <InputError message={errors.stock} className='mt-2'/> */}
+                                   <InputError message={errors.stock} className='mt-2'/> 
                                   <input
                                     type="number"
                                     value={data.stock}
@@ -210,7 +166,7 @@ const hasProductError = errors && errors.product;
                             >
                               Fecha
                             </label>
-                            {/* <InputError message={errors.date} className='mt-2'/> */}
+                            <InputError message={errors.date} className='mt-2'/> 
                             <input
                               type="date"
                               value={data.date}
@@ -225,7 +181,7 @@ const hasProductError = errors && errors.product;
                             >
                               Observación
                             </label>
-                            {/* <InputError message={errors.description} className='mt-2'/> */}
+                             <InputError message={errors.description} className='mt-2'/> 
                             <textarea
                               rows="5"
                               className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
@@ -252,8 +208,7 @@ const hasProductError = errors && errors.product;
                           <button
                             type="button"
                             className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                            //onClick={() => setOpen(false)}
-                            onClick={() => window.location.reload()}  
+                            onClick={() => setOpen(false)} 
                           >
                             Cancelar
                           </button>
@@ -269,7 +224,6 @@ const hasProductError = errors && errors.product;
         </div>
       </Dialog>
     </Transition.Root>
-    </AuthenticatedLayout>
     </>
   )
 }

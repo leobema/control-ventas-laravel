@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Sale;
 use App\Models\Product;
+use App\Models\Design;
 use Illuminate\Http\Request;
 use Inertia\Inertia; 
 
@@ -33,10 +34,23 @@ class SaleController extends Controller
         'description' => 'required',
     ]);
 
-    Sale::create($validatedData);
+     // Crear la venta
+     $sale = Sale::create($validatedData);
 
-    return redirect()->route('sales.index')->with('success', 'Venta creada exitosamente.');
-}
+     // Buscar el diseño por nombre
+     $design = Design::where('design', $request->design)->first();
+ 
+     // Verificar si se encontró el diseño
+     if ($design) {
+         // Restar la cantidad vendida del stock del diseño
+         $design->stock -= $request->stock;
+         $design->save();
+     }
+ 
+     // Redireccionar a la página de ventas con un mensaje de éxito
+     return redirect()->route('sales.index')->with('success', 'Venta creada exitosamente.');
+ }
+
 
 
     public function update(Request $request, Sale $sale)

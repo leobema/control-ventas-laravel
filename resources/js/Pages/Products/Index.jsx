@@ -3,7 +3,7 @@ import AddProduct from "@/Components/AddProduct";
 import { usePage } from '@inertiajs/react'
 import UpdateProduct from "@/Components/UpdateProduct"; 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Dialog, Transition } from "@headlessui/react";
+import { Dialog, Transition } from "@headlessui/react"; 
 import { router } from '@inertiajs/react'
 
 
@@ -30,9 +30,6 @@ const Index = ({products}) => {
     setShowDeleteModal(false);
   }; 
   
-  
-
-
   // Modal for Product ADD
   const addProductModalSetting = () => {
     setShowProductModal(prevState => !prevState);
@@ -60,7 +57,6 @@ const handleSearchTerm = (e) => {
   // Actualizar la lista de productos filtrados
   setFilteredProducts(filteredProducts);
 };
-
 
   return (
     <div>

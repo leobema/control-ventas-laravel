@@ -1,12 +1,11 @@
 import { Fragment, useRef, useState } from "react";
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import { Dialog, Transition } from "@headlessui/react";
 import InputError from '@/Components/InputError'
 import { useForm } from '@inertiajs/react'
 import { PlusIcon } from "@heroicons/react/24/outline";
 import PrimaryButton from "./PrimaryButton";
 
-const AddProduct = ({auth}) => { 
+const AddProduct = ({}) => { 
     const {data, setData, post, processing, reset, errors} = useForm({
       product: '',
       design: '',
@@ -18,17 +17,21 @@ const AddProduct = ({auth}) => {
     const [open, setOpen] = useState(true);
     const cancelButtonRef = useRef(null);
 
-    const submit =  (e) => {
-        e.preventDefault()
-        post(route('products.store'), {onSuccess: ()=> reset()} );
-        window.location.reload(); 
-    } 
-  
+    const submit = (e) => {
+      e.preventDefault();
+       post(route('products.store'), {
+          onSuccess: () => {
+              reset();
+              setOpen(false); // Cerrar el modal después de agregar el producto
+              // Aquí puedes manejar la redirección si es necesario
+          },
+          preserveState: true // Mantener los datos del formulario después de la solicitud
+      }); 
+  }
 
   return (
     // Modal
     <>
-    <AuthenticatedLayout auth={auth}>
     <Transition.Root show={open} as={Fragment}>
       <Dialog
         as="div"
@@ -179,8 +182,7 @@ const AddProduct = ({auth}) => {
                           <button
                             type="button"
                             className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                            //onClick={() => setOpen(false)}
-                            onClick={() => window.location.reload()}  
+                            onClick={() => setOpen(false)}
                           >
                             Cancelar
                           </button>
@@ -196,7 +198,6 @@ const AddProduct = ({auth}) => {
         </div>
       </Dialog>
     </Transition.Root>
-    </AuthenticatedLayout>
     </>
   );
 }

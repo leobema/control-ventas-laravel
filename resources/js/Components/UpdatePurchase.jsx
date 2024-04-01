@@ -1,5 +1,4 @@
 import { Fragment, useRef, useState } from "react";
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import { Dialog, Transition } from "@headlessui/react";
 import InputError from '@/Components/InputError'
 import { useForm, usePage } from '@inertiajs/react'
@@ -7,7 +6,6 @@ import { ArrowLongUpIcon } from "@heroicons/react/24/outline";
 import PrimaryButton from "./PrimaryButton";
 
 const UpdateSale = ({purchaseData}) => {
-  const {auth} = usePage().props
   const { data, setData, patch, processing, reset, errors } = useForm({
     name: purchaseData.name,
     price: purchaseData.price,
@@ -23,15 +21,18 @@ const cancelButtonRef = useRef(null);
 
 const submit = (e) => {
     e.preventDefault()
-    patch(route('purchases.update', { purchase: purchaseData.id }), {onSuccess: ()=> reset()} );
-    window.location.reload();
+    patch(route('purchases.update', { purchase: purchaseData.id }), { 
+      onSuccess: () => {
+        reset(); 
+        setOpen(false);
+      }
+    });  
 } 
 
 
   return (
     // Modal
     <>
-    <AuthenticatedLayout auth={auth}>
     <Transition.Root show={open} as={Fragment}>
       <Dialog
         as="div"
@@ -76,7 +77,7 @@ const submit = (e) => {
                         as="h3"
                         className="text-lg font-semibold leading-6 text-gray-900 "
                       >
-                        Agregar Compra
+                        Editar Compra
                       </Dialog.Title>
                       <form onSubmit={submit}>
                         <div className="grid grid-flow-row gap-4 mb-4 mt-4 sm:grid-cols-2">
@@ -177,8 +178,7 @@ const submit = (e) => {
                           <button
                             type="button"
                             className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                            //onClick={() => setOpen(false)}
-                            onClick={() => window.location.reload()}  
+                            onClick={() => setOpen(false)}
                           >
                             Cancelar
                           </button>
@@ -194,7 +194,6 @@ const submit = (e) => {
         </div>
       </Dialog>
     </Transition.Root>
-    </AuthenticatedLayout>
     </>
   )
 }
