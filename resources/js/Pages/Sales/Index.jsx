@@ -30,8 +30,6 @@ const Index = ({sales, products}) => {
     setShowDeleteModal(false);
   }; 
   
-  
-
 
   // Modal for sale ADD
   const addSaleModalSetting = () => {

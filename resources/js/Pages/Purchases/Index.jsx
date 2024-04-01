@@ -8,16 +8,16 @@ import { router } from '@inertiajs/react'
 
 
 const Index = ({purchases, dbpriceitems}) => {
-  const {auth} = usePage().props
+  const { auth } = usePage().props;
   const [selectedPurchseId, setSelectedPurchseId] = useState(null);
   const [selectedsaleDeleteId, setSelectedSaleDeleteId] = useState(null);
   const [updatePurchase, setUpdatePurchase] = useState([]);
   const [showSaleModal, setShowSaleModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
-  const [searchTerm, setSearchTerm] = useState();
+  const [searchTerm, setSearchTerm] = useState('');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [filteredPurchases, setFilteredPurchases] = useState(purchases); // Estado para compras filtradas
 
- 
 
    // Modal de confirmación para eliminar un ítem
   const showDeleteConfirmation = (id) => {
@@ -43,24 +43,23 @@ const Index = ({purchases, dbpriceitems}) => {
     setSelectedPurchseId(id);
     setShowUpdateModal(true);
     
-    // Lógica para mostrar el modal aquí
+    // Lógica para mostrar el modal aquí 
   }; 
 
 
+  const handleSearchTerm = (event) => {
+    const term = event.target.value.toLowerCase();
+    setSearchTerm(term);
+    
+    // Filtrar compras basadas en el término de búsqueda
+    const filteredPurchases = purchases.filter(purchase =>
+      purchase.name.toLowerCase().includes(term)
+    );
 
-// Handle Search Term
-const handleSearchTerm = (e) => {
-  const term = e.target.value ? e.target.value.toLowerCase() : ''; // Convertir el término de búsqueda a minúsculas
-  setSearchTerm(term); // Establecer el término de búsqueda en el estado
+    // Actualizar la lista de compras filtradas
+    setFilteredPurchases(filteredPurchases);
+  }; 
 
-  // Filtrar saleos basados en el término de búsqueda
-  const filteredSales = sales.filter(sale =>
-    sale.toLowerCase().includes(term)
-  );
-
-  // Actualizar la lista de sales filtrados
-  setFilteredSales(filteredSales);
-};
 
 
   return (
@@ -300,7 +299,7 @@ const handleSearchTerm = (e) => {
             </thead>
 
             <tbody className="divide-y divide-gray-200">
-                {purchases.map(purchase => (                    
+                {filteredPurchases.map(purchase => (                    
                   <tr key={purchase.id}> 
                      <td className="whitespace-nowrap px-4 py-2  text-gray-900">
                      {purchase.name}

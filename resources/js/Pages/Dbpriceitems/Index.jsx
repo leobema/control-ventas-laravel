@@ -15,6 +15,8 @@ const Index = ({dbpriceitems}) => {
   const [updatePrice, setUpdatePrice] = useState([]);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+const [searchTerm, setSearchTerm] = useState('');
+
 
      // Modal de confirmación para eliminar un ítem
      const showDeleteConfirmation = (id) => {
@@ -33,11 +35,14 @@ const Index = ({dbpriceitems}) => {
       setShowUpdateModal(true);
     } 
 
+    const filteredItems = dbpriceitems.filter(item =>
+      item.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
- /*  const handleSearchTerm = (event) => {
-    setSearchTerm(event.target.value);
-    //filterPrices(event.target.value);
-  }; */
+
+    const handleSearchTerm = (event) => {
+      setSearchTerm(event.target.value);
+    }; 
 
      // Modal for Item ADD
     const addItemModalSetting = () => {
@@ -138,13 +143,13 @@ const Index = ({dbpriceitems}) => {
                     d="m15.97 17.031c-1.479 1.238-3.384 1.985-5.461 1.985-4.697 0-8.509-3.812-8.509-8.508s3.812-8.508 8.509-8.508c4.695 0 8.508 3.812 8.508 8.508 0 2.078-.747 3.984-1.985 5.461l4.749 4.75c.146.146.219.338.219.531 0 .587-.537.75-.75.75-.192 0-.384-.073-.531-.22zm-5.461-13.53c-3.868 0-7.007 3.14-7.007 7.007s3.139 7.007 7.007 7.007c3.866 0 7.007-3.14 7.007-7.007s-3.141-7.007-7.007-7.007z" 
                     />
                     </svg> 
-      {/*           <input
+                 <input
                   className="border-none outline-none focus:border-none text-xs"
                   type="text"
                   placeholder="buscar item"
-                  value=""
-                  //onChange={}
-                /> */}
+                  value={searchTerm}
+                  onChange={handleSearchTerm}
+                /> 
               </div>
             </div>
             <div className="flex gap-4">
@@ -176,7 +181,7 @@ const Index = ({dbpriceitems}) => {
             </thead>
 
              <tbody className="divide-y divide-gray-200">    
-              {dbpriceitems.map(dbprice => (   
+              {filteredItems.map(dbprice => (   
                   <tr key={dbprice.id}> 
                     <td className="whitespace-nowrap px-4 py-2  text-gray-900">
                      {dbprice.name}

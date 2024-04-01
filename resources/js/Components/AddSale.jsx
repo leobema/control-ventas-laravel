@@ -16,7 +16,7 @@ const AddSale = ({products}) => {
     product: selectedProductName,
     design: selectedDesignName,
     client: '',
-    stock: '',
+    stock: 0,
     saleschannel: '',
     methodpay: '',
     price: '',
@@ -37,6 +37,7 @@ useEffect(() => {
     setData(prevData => ({
       ...prevData,
       design: selectedAvailableDesign.design,
+      stock: selectedAvailableDesign.stock,
     }));
     setSelectedAvailableDesign(selectedAvailableDesign);
   }
@@ -57,8 +58,10 @@ const handleDesignChange = (e) => {
   const selectedDesign = availableDesigns.find(design => design.id === selectedDesignId);
   setSelectedAvailableDesign(selectedDesign);
   setSelectedDesignName(selectedDesign ? selectedDesign.design : '');
-  console.log('selectedDesign', selectedDesign)
   setData('design', selectedDesign ? selectedDesign.design : '');
+  setData('stock', selectedDesign ? selectedDesign.stock : 0);
+  setData('price', selectedDesign ? selectedDesign.price : '');
+  console.log('selectedDesign', selectedDesign.stock);
 };
 
 const [open, setOpen] = useState(true);
@@ -70,7 +73,7 @@ const submit = (e) => {
   console.log('data', data)
     post(route('sales.store'), {onSuccess: ()=> {
       reset(); 
-      setShowUpdateModal(false);
+      setOpen(false);
     }
   }); 
 };
@@ -181,22 +184,22 @@ const submit = (e) => {
                                       value={data.design}
                                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                       />
-                                  </div>   
-                                <div>
+                                  </div> 
+                                  <div>
                                   <label
                                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                                   >
-                                    Cliente 
+                                    Precio Sugerido
                                   </label>
-                                   <InputError message={errors.client} className='mt-2'/> 
+                                  <InputError message={errors.price} className='mt-2'/>
                                   <input
-                                    type="text"
-                                    value={data.client}
-                                    onChange={ (e)=> setData('client', e.target.value)}
+                                    type="number"
+                                    value={data.price}
+                                    onChange={ (e)=> setData('price', e.target.value)}
                                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                    placeholder="Nombre"
+                                    placeholder="$299"
                                   />
-                                </div>
+                                </div>  
                                 <div>
                                   <label
                                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -204,10 +207,15 @@ const submit = (e) => {
                                     Cant
                                   </label>
                                    <InputError message={errors.stock} className='mt-2'/> 
-                                  <input
+                                   <input
                                     type="number"
                                     value={data.stock}
-                                    onChange={ (e)=> setData('stock', e.target.value)}
+                                    onChange={(e) => {
+                                      const newValue = parseInt(e.target.value);
+                                      const maxStock = selectedAvailableDesign ? selectedAvailableDesign.stock : 999; // Valor máximo de stock si no se ha seleccionado ningún diseño
+                                      const clampedValue = Math.min(newValue, maxStock); // Limitar el valor máximo al stock disponible
+                                      setData('stock', clampedValue);
+                                    }}
                                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                     placeholder="0 - 999"
                                   />
@@ -246,21 +254,22 @@ const submit = (e) => {
                           </div>
                         </div>
                         <div className="grid gap-4 mb-4 sm:grid-cols-2">
-                           <div>
-                            <label
-                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                            >
-                              Precio
-                            </label>
-                            <InputError message={errors.price} className='mt-2'/>
-                            <input
-                              type="number"
-                              value={data.price}
-                              onChange={ (e)=> setData('price', e.target.value)}
-                              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                              placeholder="$299"
-                            />
-                          </div>
+                          <div>
+                              <label
+                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                              >
+                                Cliente 
+                              </label>
+                                <InputError message={errors.client} className='mt-2'/> 
+                              <input
+                                type="text"
+                                value={data.client}
+                                onChange={ (e)=> setData('client', e.target.value)}
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                placeholder="Nombre"
+                              />
+                            </div>
+                           
                           <div>
                             <label 
                               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
