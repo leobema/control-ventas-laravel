@@ -1,21 +1,38 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { usePage } from '@inertiajs/react'
 import AddPriceMp from "@/Components/AddPriceMp";
-//import AddProduct from "@/Components/AddProduct";
-//import UpdatePriceMp from "../components/UpdatePriceMp";
+import { router } from '@inertiajs/react'
+import UpdatePriceMp from "@/Components/UpdatePriceMp";
 import { Dialog, Transition } from "@headlessui/react";
+
 
 const Index = ({dbpriceitems}) => {
   const {auth} = usePage().props
-  //const [updatePrice, setUpdatePrice] = useState([]);
-  //const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [selectedPriceId, setSelectedPriceId] = useState(null);
+  const [selectedProductDeleteId, setSelectedProductDeleteId] = useState(null);
   const [showItemModal, setShowItemModal] = useState(false);
+  const [updatePrice, setUpdatePrice] = useState([]);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
- // const [filteredPrices, setFilteredPrices] = useState([]);
- // const [searchTerm, setSearchTerm] = useState('');
 
+     // Modal de confirmación para eliminar un ítem
+     const showDeleteConfirmation = (id) => {
+      setShowDeleteModal(true);
+      setSelectedProductDeleteId(id); // Set the selected product ID
+    }; 
 
+   const deletePrice = () => {
+    router.delete(`/dbpriceitems/${selectedProductDeleteId}`)
+    console.log('id', selectedProductDeleteId)
+  setShowDeleteModal(false);
+};  
+
+   // Modal for Product UPDATE
+    const updateProductModalSetting = (id) => {
+      setSelectedPriceId(id);
+      setShowUpdateModal(true);
+    } 
 
 
  /*  const handleSearchTerm = (event) => {
@@ -45,13 +62,13 @@ const Index = ({dbpriceitems}) => {
           addItemModalSetting={addItemModalSetting}
           />
         )}
-{/*          {showUpdateModal && (
+         {showUpdateModal && (
            <UpdatePriceMp
             priceId={selectedPriceId}
             updatePricetData={updatePrice}
-            updateModalSetting={updatePriceModalSetting}
+            updateModalSetting={updateProductModalSetting}
           /> 
-          )}  */}
+          )}  
 
           {/* Modal de confirmación para eliminar */} 
           {showDeleteModal && (
@@ -177,7 +194,7 @@ const Index = ({dbpriceitems}) => {
                         
                          onClick={() => {
                           setSelectedPriceId(dbprice.id);
-                          //setShowUpdateModal(true);
+                          setShowUpdateModal(true);
                           setUpdatePrice(dbprice); 
                         }} 
                       >
@@ -186,9 +203,9 @@ const Index = ({dbpriceitems}) => {
                       <span
                         className="text-red-600 px-2 cursor-pointer"
                         onClick={() => {
-                          setShowDeleteModal(true)
-                          setSelectedPriceId(dbprice.id)
-                          setUpdatePrice(dbprice);
+                          showDeleteConfirmation(dbprice.id)
+                          //router.delete(`/dbpriceitems/${dbprice.id}`)
+                          //console.log('dbprice.id', dbprice.id)
                         }}
                       >
                         Borrar

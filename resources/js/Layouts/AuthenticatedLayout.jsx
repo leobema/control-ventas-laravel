@@ -31,25 +31,25 @@ export default function Authenticated({ user, header, children }) {
                                 href={route('dbpriceitems.index')} 
                                 active={route().current('dbpriceitems.index')}
                                 >
-                                    Precios Items 
+                                    Inventario Items 
                                 </NavLink>
                                 <NavLink 
-                                href={route('purchase.index')} 
-                                active={route().current('purchase.index')}
+                                href={route('purchases.index')} 
+                                active={route().current('purchases.index')}
                                 >
-                                    Control Productos 
+                                    Compras 
                                 </NavLink>
                                 <NavLink 
                                 href={route('products.index')} 
                                 active={route().current('products.index')}
                                 >
-                                    Inventario Productos 
+                                    Productos 
                                 </NavLink>
                                 <NavLink 
                                 href={route('sales.index')} 
                                 active={route().current('sales.index')}
                                 >
-                                    Control Ventas 
+                                    Ventas 
                                 </NavLink>
                             </div>
                             
@@ -127,16 +127,28 @@ export default function Authenticated({ user, header, children }) {
                             Estadística
                         </ResponsiveNavLink>
                         <ResponsiveNavLink 
+                         href={route('dbpriceitems.index')} 
+                         active={route().current('dbpriceitems.index')}
+                        >
+                        Inventario Items 
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink 
+                         href={route('purchases.index')} 
+                         active={route().current('purchases.index')}
+                        >
+                        Compras
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink 
                         href={route('products.index')} 
                         active={route().current('products.index')}
                         >
-                        Inventario Productos 
+                        Productos 
                         </ResponsiveNavLink>
                         <ResponsiveNavLink 
                         href={route('sales.index')} 
                         active={route().current('sales.index')}
                         >
-                        Control Ventas 
+                        Ventas 
                         </ResponsiveNavLink>
                     </div>
 

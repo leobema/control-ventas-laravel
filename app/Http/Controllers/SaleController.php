@@ -10,7 +10,7 @@ use Inertia\Inertia;
 class SaleController extends Controller
 {
 
-    public function index() 
+    public function index()  
     {
         $sales = Sale::latest()->get();
         $products = Product::with('designs')->latest()->get();

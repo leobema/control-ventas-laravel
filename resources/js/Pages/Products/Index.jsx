@@ -26,6 +26,7 @@ const Index = ({products}) => {
 
   const deleteProduct = () => {
     router.delete(`/products/${selectedProductDeleteId}`)
+    console.log('selectedProductDeleteId', selectedProductDeleteId)
     setShowDeleteModal(false);
   }; 
   

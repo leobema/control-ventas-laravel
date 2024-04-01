@@ -1,17 +1,17 @@
-import React, { useState  } from "react";  
-import AddSale from "@/Components/AddSale";
+import React, { useState  } from "react";
+import AddPurchase from "@/Components/AddPurchase";
 import { usePage } from '@inertiajs/react'
-import UpdateSale from "@/Components/UpdateSale"; 
+import UpdatePurchase from "@/Components/UpdatePurchase"; 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Dialog, Transition } from "@headlessui/react";
 import { router } from '@inertiajs/react'   
 
 
-const Index = ({sales, products}) => {
+const Index = ({purchases, dbpriceitems}) => {
   const {auth} = usePage().props
-  const [selectedSaleId, setSelectedSaleId] = useState(null);
+  const [selectedPurchseId, setSelectedPurchseId] = useState(null);
   const [selectedsaleDeleteId, setSelectedSaleDeleteId] = useState(null);
-  const [updateSale, setUpdateSale] = useState([]);
+  const [updatePurchase, setUpdatePurchase] = useState([]);
   const [showSaleModal, setShowSaleModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState();
@@ -22,11 +22,11 @@ const Index = ({sales, products}) => {
    // Modal de confirmación para eliminar un ítem
   const showDeleteConfirmation = (id) => {
     setShowDeleteModal(true);
-    setSelectedSaleDeleteId(id); // Set the selected sale ID
+    setSelectedSaleDeleteId(id); // Set the selected sale ID 
   }; 
 
   const deleteSale = () => {
-    router.delete(`/sales/${selectedsaleDeleteId}`)
+    router.delete(`/purchases/${selectedsaleDeleteId}`)
     setShowDeleteModal(false);
   }; 
   
@@ -39,8 +39,8 @@ const Index = ({sales, products}) => {
   };
 
    // Modal for sale UPDATE
-  const updateSaleModalSetting = (saleId) => {
-    setSelectedSaleId(saleId);
+  const updateSaleModalSetting = (id) => {
+    setSelectedPurchseId(id);
     setShowUpdateModal(true);
     
     // Lógica para mostrar el modal aquí
@@ -62,8 +62,6 @@ const handleSearchTerm = (e) => {
   setFilteredSales(filteredSales);
 };
 
-console.log('sales', sales)
-
 
   return (
     <div>
@@ -75,7 +73,7 @@ console.log('sales', sales)
             <div className=" flex flex-col md:flex-row justify-center items-center">
                 <div className="flex flex-col p-10  w-full  md:w-3/12  ">
                 <span className="font-semibold text-blue-600 text-base">
-                    Top 10 Últimos 30 días 
+                    Top 10 Últimos 30 días
                 </span>
                 <span className="font-semibold text-gray-600 text-2xl">
                 #1 Remeras
@@ -172,18 +170,18 @@ console.log('sales', sales)
 
 
         {showSaleModal && (
-          <AddSale
+          <AddPurchase
             addSaleModalSetting={addSaleModalSetting}
-            products={products}
+            dbpriceitems={dbpriceitems}
           />
         )}
         {showUpdateModal && (
-           <UpdateSale
-            saleId={selectedSaleId}
-            saleData={updateSale}
+           <UpdatePurchase
+            purchaseId={selectedPurchseId} 
+            purchaseData={updatePurchase}
             updateModalSetting={updateSaleModalSetting}
           /> 
-          )}
+          )} 
 
           {/* Modal de confirmación para eliminar */} 
         {showDeleteModal && (
@@ -269,37 +267,25 @@ console.log('sales', sales)
                 onClick={addSaleModalSetting}
                 
               >
-                Agregar Venta
+                Agregar Compra
               </button>
               
             </div>
           </div>
           <table className="min-w-full divide-y-2 divide-gray-200 text-sm">
           <thead>
-              <tr>
+          <tr>
                 <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                  Producto
-                </th>
-                <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                  Diseño
-                </th>
-                <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                  Cliente
-                </th>
-                <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                  Canal de Venta
-                </th>
-                <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                  Método de Pago
-                </th>
-                <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                  Und
+                  Item
                 </th>
                 <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
                   Precio
                 </th>
                 <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                  Total $
+                  Cant
+                </th>
+                <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
+                  $ Total
                 </th>
                 <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
                   Fecha
@@ -314,53 +300,40 @@ console.log('sales', sales)
             </thead>
 
             <tbody className="divide-y divide-gray-200">
-                {sales.map(sale => (                    
-                  <tr key={sale.id}> 
+                {purchases.map(purchase => (                    
+                  <tr key={purchase.id}> 
                      <td className="whitespace-nowrap px-4 py-2  text-gray-900">
-                     {sale.product}
-                     {products.find(product => product.id === sale.product)?.name}
+                     {purchase.name}
                     </td>
                     <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                    {sale.design}
+                    {purchase.price}
                     </td>
                     <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                    {sale.client}
+                    {purchase.stock}
                     </td>
                     <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                    {sale.saleschannel}
+                    N/A
                     </td>
                     <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                    {sale.methodpay}
+                    {purchase.date}
                     </td>
                     <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                    {sale.stock}
-                    </td>
-                    <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                    ${sale.price}
-                    </td>
-                    <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                    ${sale.price * sale.stock}
-                    </td>
-                    <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                    {sale.date}
-                    </td>
-                    <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                    {sale.description}
+                    {purchase.description}
                     </td>
                     <td className="whitespace-nowrap px-4 py-2 text-gray-700">
                       <span
                         className="text-green-700 cursor-pointer"
                         onClick={() => {
-                          setSelectedSaleId(sale.id);
+                          setSelectedPurchseId(purchase.id);
                           setShowUpdateModal(true);
-                          setUpdateSale(sale);
+                          setUpdatePurchase(purchase);
                         }}
                       >
                         Editar{" "}
                       </span>
                       <span
                         className="text-red-600 px-2 cursor-pointer"
-                        onClick={() => showDeleteConfirmation(sale.id)}
+                        onClick={() => showDeleteConfirmation(purchase.id)}
                       >
                         Borrar
                       </span>
@@ -381,3 +354,4 @@ console.log('sales', sales)
 }
 
 export default Index;
+

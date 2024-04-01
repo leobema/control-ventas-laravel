@@ -6,28 +6,24 @@ import { useForm, usePage } from '@inertiajs/react'
 import { ArrowLongUpIcon } from "@heroicons/react/24/outline"; 
 import PrimaryButton from "./PrimaryButton";
 
-const UpdateSale = ({saleData}) => {
+const UpdateSale = ({purchaseData}) => {
   const {auth} = usePage().props
   const { data, setData, patch, processing, reset, errors } = useForm({
-    product: saleData.product,
-    design: saleData.design,
-    client: saleData.client,
-    stock: saleData.stock,
-    saleschannel: saleData.saleschannel,
-    methodpay: saleData.methodpay,
-    price: saleData.price,
-    date: saleData.date,
-    description: saleData.description,
+    name: purchaseData.name,
+    price: purchaseData.price,
+    stock: purchaseData.stock,
+    date: purchaseData.date,
+    description: purchaseData.description,
   });
 
-console.log(saleData)
+//console.log(saleData)
 
 const [open, setOpen] = useState(true);
 const cancelButtonRef = useRef(null);
 
 const submit = (e) => {
     e.preventDefault()
-    patch(route('sales.update', { sale: saleData.id }), {onSuccess: ()=> reset()} );
+    patch(route('purchases.update', { purchase: purchaseData.id }), {onSuccess: ()=> reset()} );
     window.location.reload();
 } 
 
@@ -80,7 +76,7 @@ const submit = (e) => {
                         as="h3"
                         className="text-lg font-semibold leading-6 text-gray-900 "
                       >
-                        Editar Venta
+                        Agregar Compra
                       </Dialog.Title>
                       <form onSubmit={submit}>
                         <div className="grid grid-flow-row gap-4 mb-4 mt-4 sm:grid-cols-2">
@@ -88,54 +84,39 @@ const submit = (e) => {
                             <label
                               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                             >
-                              Producto
+                              Item
                             </label>
-                              <input
-                                    type="text"
-                                    value={data.product}
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                    disabled
-                                    
-                                  />
+                            <input
+                              disabled
+                              value={data.name}
+                              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            />
+                            <InputError message={errors.name} className='mt-2'/> 
                           </div>
                         </div>
                         <div className="grid grid-flow-row gap-4 my-4 grid-cols-2">
                           <div className="col-span-2">
                               <div className="grid gap-4 my-2 grid-cols-2">
+                                 <div className="col-span-2">
                                   <label
                                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                                   >
-                                    Diseño 
+                                    Precio 
                                   </label>
-                                  <div className="col-span-2">
-                                      <input 
-                                      disabled
-                                      value={data.design}
-                                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                      />
-                                  </div>   
-                                <div>
-                                  <label
-                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                  >
-                                    Cliente 
-                                  </label>
-                                   <InputError message={errors.client} className='mt-2'/> 
                                   <input
-                                    type="text"
-                                    value={data.client}
-                                    onChange={ (e)=> setData('client', e.target.value)}
+                                    disabled
+                                    value={`$${data.price}`}
                                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                    placeholder="Nombre"
                                   />
-                                </div>
+                                    <InputError message={errors.price} className='mt-2'/> 
+                                </div>   
                                 <div>
                                   <label
                                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                                   >
                                     Cant
                                   </label>
-                                  <InputError message={errors.stock} className='mt-2'/> 
+                                   <InputError message={errors.stock} className='mt-2'/> 
                                   <input
                                     type="number"
                                     value={data.stock}
@@ -144,62 +125,17 @@ const submit = (e) => {
                                     placeholder="0 - 999"
                                   />
                                 </div>
-                                <div>
-                                  <label
-                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                  >
-                                    Canal de Venta 
-                                  </label>
-                                   <InputError message={errors.saleschannel} className='mt-2'/> 
-                                  <input
-                                    type="text"
-                                    value={data.saleschannel}
-                                    onChange={ (e)=> setData('saleschannel', e.target.value)}
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                    placeholder="Mercadolibre"
-                                  />
-                                </div>
-                                <div>
-                                  <label
-                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                  >
-                                    Método de Pago 
-                                  </label>
-                                   <InputError message={errors.methodpay} className='mt-2'/> 
-                                  <input
-                                    type="text"
-                                    value={data.methodpay}
-                                    onChange={ (e)=> setData('methodpay', e.target.value)}
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                    placeholder="Efectivo"
-                                  />
-                                </div>
                               </div>
                           </div>
                         </div>
                         <div className="grid gap-4 mb-4 sm:grid-cols-2">
-                           <div>
-                            <label
-                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                            >
-                              Precio
-                            </label>
-                             <InputError message={errors.price} className='mt-2'/> 
-                            <input
-                              type="number"
-                              value={data.price}
-                              onChange={ (e)=> setData('price', e.target.value)}
-                              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                              placeholder="$299"
-                            />
-                          </div>
                           <div>
                             <label 
                               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                             >
                               Fecha
                             </label>
-                             <InputError message={errors.date} className='mt-2'/>
+                            <InputError message={errors.date} className='mt-2'/> 
                             <input
                               type="date"
                               value={data.date}
@@ -214,7 +150,7 @@ const submit = (e) => {
                             >
                               Observación
                             </label>
-                             <InputError message={errors.description} className='mt-2'/>
+                             <InputError message={errors.description} className='mt-2'/> 
                             <textarea
                               rows="5"
                               className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
@@ -236,7 +172,7 @@ const submit = (e) => {
                             className="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto"
                             disabled = {processing}
                           >
-                           Guardar Cambios
+                            Guardar Cambios
                           </PrimaryButton>
                           <button
                             type="button"

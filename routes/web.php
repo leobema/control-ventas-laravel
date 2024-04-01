@@ -37,11 +37,13 @@ Route::middleware('auth')->group(function () {
     Route::resource('sales', SaleController::class)
     ->only(['index', 'store', 'update', 'destroy']);
 
-    Route::resource('purchase', PurchaseController::class)
+    Route::resource('purchases', PurchaseController::class)
     ->only(['index', 'store', 'update', 'destroy']);
 
     Route::resource('dbpriceitems', DbitemspriceController::class)
     ->only(['index', 'store', 'update', 'destroy']);
+
+    
 });
 
 

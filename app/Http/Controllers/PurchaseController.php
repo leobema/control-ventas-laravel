@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Purchase;
+use App\Models\Dbpriceitem;
 use Illuminate\Http\Request;
 use Inertia\Inertia; 
 
@@ -13,7 +14,10 @@ class PurchaseController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Purchase/Index');
+
+        $purchases = Purchase::latest()->get();
+        $dbpriceitems = Dbpriceitem::latest()->get();
+        return Inertia::render('Purchases/Index', ['purchases' => $purchases, 'dbpriceitems' => $dbpriceitems]);
     }
 
     /**
@@ -30,7 +34,7 @@ class PurchaseController extends Controller
         ]);
     
         Purchase::create($validatedData);
-        return redirect()->route('purchase.index')->with('success', 'Compra creada exitosamente.');
+        return redirect()->route('purchases.index')->with('success', 'Compra creada exitosamente.');
     }
 
     /**
@@ -56,6 +60,6 @@ class PurchaseController extends Controller
     public function destroy(Purchase $purchase)
     {
         $purchase->delete();
-        return redirect(route('purchase.index'));
+        return redirect(route('purchases.index'));
     }
 }

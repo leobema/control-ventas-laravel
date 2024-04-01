@@ -62,7 +62,7 @@ class ProductController extends Controller
         ]);
     
         // Actualizar el producto
-        $product->update($validated);
+        $product->update($validated); 
     
         // Verificar si se proporciona un diseño en la solicitud
         if ($request->has('design')) {
