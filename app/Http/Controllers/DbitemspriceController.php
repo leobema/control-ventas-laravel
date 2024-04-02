@@ -53,6 +53,5 @@ class DbitemspriceController extends Controller
         //Dbpriceitem::delete($validatedData);
         $dbpriceitem->delete();
         return redirect()->route('dbpriceitems.index');
-        //return redirect()->route('dbpriceitems.index')->with('success', 'Item eliminado exitosamente.');
     }
 }

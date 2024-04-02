@@ -34,11 +34,11 @@ class PurchaseController extends Controller
         ]);
     
         Purchase::create($validatedData);
-        return redirect()->route('purchases.index')->with('success', 'Compra creada exitosamente.');
+        return redirect()->route('purchases.index');
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified resource in storage. 
      */
     public function update(Request $request, Purchase $purchase)
     {
@@ -60,6 +60,6 @@ class PurchaseController extends Controller
     public function destroy(Purchase $purchase)
     {
         $purchase->delete();
-        return redirect(route('purchases.index'));
+        return redirect()->route('purchases.index');
     }
 }

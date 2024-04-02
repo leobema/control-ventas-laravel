@@ -1,4 +1,4 @@
-import React, { useState  } from "react";  
+import React, { useState, useEffect } from "react";  
 import AddSale from "@/Components/AddSale";
 import { usePage } from '@inertiajs/react'
 import UpdateSale from "@/Components/UpdateSale"; 
@@ -14,8 +14,9 @@ const Index = ({sales, products}) => {
   const [updateSale, setUpdateSale] = useState([]);
   const [showSaleModal, setShowSaleModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
-  const [searchTerm, setSearchTerm] = useState();
+  const [searchTerm, setSearchTerm] = useState('');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [filteredSales, setFilteredSales] = useState([]);
 
  
 
@@ -44,21 +45,18 @@ const Index = ({sales, products}) => {
     // Lógica para mostrar el modal aquí
   }; 
 
+  // Handle Search Term
+  const handleSearchTerm = (e) => {
+    setSearchTerm(e.target.value.toLowerCase());
+  };
 
-
-// Handle Search Term
-const handleSearchTerm = (e) => {
-  const term = e.target.value ? e.target.value.toLowerCase() : ''; // Convertir el término de búsqueda a minúsculas
-  setSearchTerm(term); // Establecer el término de búsqueda en el estado
-
-  // Filtrar saleos basados en el término de búsqueda
-  const filteredSales = sales.filter(sale =>
-    sale.toLowerCase().includes(term)
-  );
-
-  // Actualizar la lista de sales filtrados
-  setFilteredSales(filteredSales);
-};
+  useEffect(() => {
+    // Filtrar ventas basadas en el término de búsqueda
+    const filteredSales = sales.filter(sale =>
+      sale.product.toLowerCase().includes(searchTerm)
+    );
+    setFilteredSales(filteredSales);
+  }, [searchTerm, sales]);
 
   return (
     <div>
@@ -309,7 +307,7 @@ const handleSearchTerm = (e) => {
             </thead>
 
             <tbody className="divide-y divide-gray-200">
-                {sales.map(sale => (                    
+                {filteredSales.map(sale => (                    
                   <tr key={sale.id}> 
                      <td className="whitespace-nowrap px-4 py-2  text-gray-900">
                      {sale.product}
@@ -351,13 +349,13 @@ const handleSearchTerm = (e) => {
                           setUpdateSale(sale);
                         }}
                       >
-                        Editar{" "}
+                        📝{" "}
                       </span>
                       <span
                         className="text-red-600 px-2 cursor-pointer"
                         onClick={() => showDeleteConfirmation(sale.id)}
                       >
-                        Borrar
+                        🗑
                       </span>
                     </td>
                   </tr>

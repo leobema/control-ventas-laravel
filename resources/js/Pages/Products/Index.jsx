@@ -1,10 +1,10 @@
-import React, { useState  } from "react";
+import React, { useState, useEffect } from "react";
 import AddProduct from "@/Components/AddProduct";
 import { usePage } from '@inertiajs/react'
 import UpdateProduct from "@/Components/UpdateProduct"; 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Dialog, Transition } from "@headlessui/react"; 
-import { router } from '@inertiajs/react'
+import { router } from '@inertiajs/react' 
 
 
 const Index = ({products}) => {
@@ -14,9 +14,17 @@ const Index = ({products}) => {
   const [updateProduct, setUpdateProduct] = useState([]);
   const [showProductModal, setShowProductModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
-  const [searchTerm, setSearchTerm] = useState();
+  const [searchTerm, setSearchTerm] = useState('');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [filteredProducts, setFilteredProducts] = useState(products);
 
+
+  useEffect(() => { 
+    const filtered = products.filter(product =>
+      product.product.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredProducts(filtered);
+  }, [products, searchTerm]);
 
    // Modal de confirmación para eliminar un ítem
   const showDeleteConfirmation = (id) => {
@@ -26,7 +34,6 @@ const Index = ({products}) => {
 
   const deleteProduct = () => {
     router.delete(`/products/${selectedProductDeleteId}`)
-    console.log('selectedProductDeleteId', selectedProductDeleteId)
     setShowDeleteModal(false);
   }; 
   
@@ -43,20 +50,23 @@ const Index = ({products}) => {
     // Lógica para mostrar el modal aquí
   }; 
 
-
-// Handle Search Term
-const handleSearchTerm = (e) => {
-  const term = e.target.value.toLowerCase(); // Convertir el término de búsqueda a minúsculas
-  setSearchTerm(term); // Establecer el término de búsqueda en el estado
-
-  // Filtrar productos basados en el término de búsqueda
-  const filteredProducts = products.filter(product =>
-    product.product.toLowerCase().includes(term)
-  );
-
-  // Actualizar la lista de productos filtrados
-  setFilteredProducts(filteredProducts);
-};
+  const handleSearchTerm = (e) => {
+    const term = e.target.value.trim(); // Asegurar que term no tenga espacios en blanco al inicio y al final
+    setSearchTerm(term); // Establecer el término de búsqueda en el estado
+  
+    // Verificar que searchTerm no sea undefined antes de llamar a toLowerCase()
+    if (term !== undefined) {
+      // Filtrar productos basados en el término de búsqueda
+      const filteredProducts = products.filter(product =>
+        product.product.toLowerCase().includes(term.toLowerCase())
+      );
+  
+      // Actualizar la lista de productos filtrados
+      setFilteredProducts(filteredProducts);
+    }
+  };
+  
+  
 
   return (
     <div>
@@ -84,7 +94,6 @@ const handleSearchTerm = (e) => {
               <div className="flex gap-8">
                 <div className="flex flex-col">
                   <span className="font-semibold text-gray-600 text-base">
-                   {/* {calcularUnidadesTotalesStock()}  */}
                   </span>
                   <span className="font-thin text-gray-400 text-xs">
                     Stock
@@ -283,7 +292,7 @@ const handleSearchTerm = (e) => {
             </thead>
 
             <tbody className="divide-y divide-gray-200">
-                {products.map(product => (
+                {filteredProducts.map(product => (
                   <tr key={product.id}> 
                     <td className="whitespace-nowrap px-4 py-2  text-gray-900">
                      {product.product}
@@ -365,14 +374,14 @@ const handleSearchTerm = (e) => {
                           setUpdateProduct(product); 
                         }}
                       >
-                        Editar{" "}
+                        📝{" "}
                       </button>
                     
                       <span
                         className="text-red-600 px-2 cursor-pointer"
                         onClick={() => showDeleteConfirmation(product.id)}
                       >
-                        Borrar
+                        🗑
                       </span>
                       
                     </td>

@@ -24,7 +24,7 @@ const [searchTerm, setSearchTerm] = useState('');
       setSelectedProductDeleteId(id); // Set the selected product ID
     }; 
 
-   const deletePrice = () => {
+    const deletePrice = () => {
     router.delete(`/dbpriceitems/${selectedProductDeleteId}`)
   setShowDeleteModal(false);
 };  
@@ -50,7 +50,7 @@ const [searchTerm, setSearchTerm] = useState('');
     };  
 
     function formatDate(dateString) {
-      const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
+      const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
       const date = new Date(dateString);
       return date.toLocaleDateString('es-ES', options);
   }
@@ -58,7 +58,7 @@ const [searchTerm, setSearchTerm] = useState('');
   return (
 
   <AuthenticatedLayout user={auth.user}>
-    <div className="col-span-12 lg:col-span-10  flex justify-center">
+    <div className=" pt-2 col-span-12 lg:col-span-10  flex justify-center">
       <div className=" flex flex-col gap-5 w-11/12">
 
           {showItemModal && (
@@ -129,9 +129,9 @@ const [searchTerm, setSearchTerm] = useState('');
 
        
         {/* Table  */}
-        <div className="overflow-x-auto rounded-lg border bg-white border-gray-200 ">
+        <div className=" overflow-x-auto rounded-lg border bg-white border-gray-200 ">
           <div className="flex justify-between pt-5 pb-3 px-3">
-            <div className="flex gap-4 justify-center items-center ">
+            <div className="flex  md:flex-row gap-4 justify-center items-center">
               <span className="font-bold">Items</span>
               <div className="flex justify-center items-center px-2 border-2 rounded-md ">
               <svg 
@@ -172,7 +172,7 @@ const [searchTerm, setSearchTerm] = useState('');
                   Precio
                 </th>
                 <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                  Última Actualización
+                  Última Act
                 </th>
                 <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
                   Acción
@@ -202,7 +202,7 @@ const [searchTerm, setSearchTerm] = useState('');
                           setUpdatePrice(dbprice); 
                         }} 
                       >
-                        Editar{" "}
+                        📝 {" "} 
                       </button>
                       <span
                         className="text-red-600 px-2 cursor-pointer"
@@ -210,7 +210,7 @@ const [searchTerm, setSearchTerm] = useState('');
                           showDeleteConfirmation(dbprice.id)
                         }}
                       >
-                        Borrar
+                       🗑
                       </span>
                       
                     </td>

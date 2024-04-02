@@ -1,4 +1,4 @@
-import React, { useState  } from "react";
+import React, { useState, useEffect } from "react";
 import AddPurchase from "@/Components/AddPurchase";
 import { usePage } from '@inertiajs/react'
 import UpdatePurchase from "@/Components/UpdatePurchase"; 
@@ -9,27 +9,39 @@ import { router } from '@inertiajs/react'
 
 const Index = ({purchases, dbpriceitems}) => {
   const { auth } = usePage().props;
+
   const [selectedPurchseId, setSelectedPurchseId] = useState(null);
-  const [selectedsaleDeleteId, setSelectedSaleDeleteId] = useState(null);
-  const [updatePurchase, setUpdatePurchase] = useState([]);
+  const [selectedSaleDeleteId, setSelectedSaleDeleteId] = useState(null);
+  const [updatePurchase, setUpdatePurchase] = useState(null);
   const [showSaleModal, setShowSaleModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [filteredPurchases, setFilteredPurchases] = useState(purchases); // Estado para compras filtradas
+  const [filteredPurchases, setFilteredPurchases] = useState(purchases); 
 
+  useEffect(() => {
+    const filtered = purchases.filter(purchase =>
+      purchase.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredPurchases(filtered);
+  }, [purchases, searchTerm]);
 
-   // Modal de confirmación para eliminar un ítem
+  const handleSearchTerm = (event) => {
+    const term = event.target.value.toLowerCase();
+    setSearchTerm(term);
+  };  
+
+   // Modal de confirmación para eliminar un ítem 
   const showDeleteConfirmation = (id) => {
     setShowDeleteModal(true);
     setSelectedSaleDeleteId(id); // Set the selected sale ID  
   }; 
 
   const deleteSale = () => {
-    router.delete(`/purchases/${selectedsaleDeleteId}`)
+    router.delete(`/purchases/${selectedSaleDeleteId}`)
     setShowDeleteModal(false);
-  }; 
-  
+    setFilteredPurchases(filteredPurchases.filter(purchase => purchase.id !== selectedSaleDeleteId));
+  };
   
 
 
@@ -46,19 +58,10 @@ const Index = ({purchases, dbpriceitems}) => {
     // Lógica para mostrar el modal aquí 
   }; 
 
-
-  const handleSearchTerm = (event) => {
-    const term = event.target.value.toLowerCase();
-    setSearchTerm(term);
-    
-    // Filtrar compras basadas en el término de búsqueda
-    const filteredPurchases = purchases.filter(purchase =>
-      purchase.name.toLowerCase().includes(term)
-    );
-
+  
     // Actualizar la lista de compras filtradas
-    setFilteredPurchases(filteredPurchases);
-  }; 
+    //setFilteredPurchases(filteredPurchases);
+ 
 
 
 
@@ -215,7 +218,7 @@ const Index = ({purchases, dbpriceitems}) => {
                                 <button
                                 type="button"
                                 className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 mr-3"
-                                onClick={() => deleteSale(selectedsaleDeleteId)}
+                                onClick={() => deleteSale(selectedPurchseId)}
                                 >
                                 Eliminar
                                 </button>
@@ -240,7 +243,7 @@ const Index = ({purchases, dbpriceitems}) => {
         <div className="overflow-x-auto rounded-lg border bg-white border-gray-200 ">
           <div className="flex justify-between pt-5 pb-3 px-3">
             <div className="flex gap-4 justify-center items-center ">
-              <span className="font-bold">Productos</span>
+              <span className="font-bold">Compras</span>
               <div className="flex justify-center items-center px-2 border-2 rounded-md ">
                 <svg 
                 width="12"
@@ -328,13 +331,13 @@ const Index = ({purchases, dbpriceitems}) => {
                           setUpdatePurchase(purchase);
                         }}
                       >
-                        Editar{" "}
+                        📝{" "}
                       </span>
                       <span
                         className="text-red-600 px-2 cursor-pointer"
                         onClick={() => showDeleteConfirmation(purchase.id)}
                       >
-                        Borrar
+                        🗑
                       </span>
                     </td>
                   </tr>

@@ -9,7 +9,7 @@ const AddPurchase = ({dbpriceitems}) => {
   const [selectedDesignName, setSelectedDesignName] = useState('');
   const [selectedItemPrice, setSelectedItemPrice] = useState('');
 
-  const initialFormData = {
+  const initialFormData = { 
     name: selectedDesignName,
     price: selectedItemPrice,
     stock: '',
@@ -38,12 +38,12 @@ const handleNameChange = (e) => {
 
 
 const [open, setOpen] = useState(true);
-const cancelButtonRef = useRef(null); 
+const cancelButtonRef = useRef(null);  
 
 
 const submit = (e) => {
   e.preventDefault();
-   post(route('purchases.store'), { 
+   post(route('purchases.store'), {
     onSuccess: () => {
       reset(); 
       setOpen(false);

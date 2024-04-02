@@ -2,7 +2,7 @@ import { Fragment, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import InputError from '@/Components/InputError'
 import { useForm } from '@inertiajs/react'
-import { PlusIcon } from "@heroicons/react/24/outline";
+import { PlusIcon } from "@heroicons/react/24/outline"; 
 import PrimaryButton from "./PrimaryButton";
 
 const AddProduct = ({}) => { 
@@ -14,12 +14,12 @@ const AddProduct = ({}) => {
       description: '',
     })
 
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(true); 
     const cancelButtonRef = useRef(null);
 
     const submit = (e) => {
       e.preventDefault();
-       post(route('products.store'), {
+       post(route('products.store'), { 
           onSuccess: () => {
               reset();
               setOpen(false); // Cerrar el modal después de agregar el producto
