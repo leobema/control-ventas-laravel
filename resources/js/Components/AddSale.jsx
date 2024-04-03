@@ -70,7 +70,6 @@ const cancelButtonRef = useRef(null);
 
 const submit = (e) => {
   e.preventDefault();
-  console.log('data', data)
     post(route('sales.store'), {onSuccess: ()=> {
       reset(); 
       setOpen(false);

@@ -70,7 +70,9 @@ const Index = ({purchases, dbpriceitems}) => {
     <AuthenticatedLayout user={auth.user}>
     <div className="col-span-12 lg:col-span-10  flex justify-center">
       <div className=" flex flex-col gap-5 w-11/12">
-        <div className="bg-white rounded p-3">
+
+        {/* ENCABEZADO POR REALIZAR */}
+        {/* <div className="bg-white rounded p-3">
             <span className="font-bold px-4">Control de Ventas</span>
             <div className=" flex flex-col md:flex-row justify-center items-center">
                 <div className="flex flex-col p-10  w-full  md:w-3/12  ">
@@ -106,7 +108,7 @@ const Index = ({purchases, dbpriceitems}) => {
                     <div className="flex flex-col">
                     <span className="font-semibold text-gray-600 text-base">
                     {/* {totalStockUp}  */}
-                    </span>
+                    {/* </span>
                     <span className="font-thin text-gray-400 text-xs">
                         Suma de stock
                     </span>
@@ -114,7 +116,7 @@ const Index = ({purchases, dbpriceitems}) => {
                     <div className="flex flex-col">
                     <span className="font-semibold text-gray-600 text-base">
                         {/* ${totalPriceUp}  */}
-                    </span>
+                   {/*  </span>
                     <span className="font-thin text-gray-400 text-xs">
                         Valor Total
                     </span>
@@ -129,7 +131,7 @@ const Index = ({purchases, dbpriceitems}) => {
                     <div className="flex flex-col">
                     <span className="font-semibold text-yellow-600 text-base">
                     {/* {countProductsLowStock}  */}
-                    </span>
+                   {/* </span>
                     <span className="font-thin text-gray-400 text-xs">
                         Stock Bajo
                     </span>
@@ -137,7 +139,7 @@ const Index = ({purchases, dbpriceitems}) => {
                     <div className="flex flex-col">
                     <span className="font-semibold text-red-600 text-base">
                     {/* {countProductsNoStock}  */}
-                    </span>
+                  {/*  </span>
                     <span className="font-thin text-gray-400 text-xs">
                         Sin Stock
                     </span>
@@ -168,7 +170,7 @@ const Index = ({purchases, dbpriceitems}) => {
                 </div>
                 </div>
             </div>
-            </div>
+            </div> */} 
 
 
         {showSaleModal && (

@@ -17,6 +17,8 @@ const Index = ({products}) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [filteredProducts, setFilteredProducts] = useState(products);
+  const [totalStock, setTotalStock] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(0);
 
 
   useEffect(() => { 
@@ -25,6 +27,32 @@ const Index = ({products}) => {
     );
     setFilteredProducts(filtered);
   }, [products, searchTerm]);
+
+  useEffect(() => {
+    // Calcula la suma total del stock al actualizar la lista de productos
+    const sumStock = filteredProducts.reduce((accumulator, product) => {
+      if (product.designs && product.designs.length > 0) {
+        product.designs.forEach(design => {
+          accumulator += design.stock;
+        });
+      }
+      return accumulator;
+    }, 0);
+    setTotalStock(sumStock);
+  }, [filteredProducts]);
+
+  useEffect(() => {
+    // Calcula la suma total del stock al actualizar la lista de productos
+    const sumPrice = filteredProducts.reduce((accumulator, product) => {
+      if (product.designs && product.designs.length > 0) {
+        product.designs.forEach(design => {
+          accumulator += design.price * design.stock;
+        });
+      }
+      return accumulator;
+    }, 0);
+    setTotalPrice(sumPrice);
+  }, [filteredProducts]);
 
    // Modal de confirmación para eliminar un ítem
   const showDeleteConfirmation = (id) => {
@@ -65,6 +93,29 @@ const Index = ({products}) => {
       setFilteredProducts(filteredProducts);
     }
   };
+
+  // Contar productos con stock bajo o sin stock
+const countLowStockAndOutOfStockProducts = () => {
+  const lowStockProducts = filteredProducts.filter(product => {
+    return product.designs.some(design => design.stock > 0 && design.stock <= 3);
+  });
+
+  const outOfStockProducts = filteredProducts.filter(product => {
+    return product.designs.every(design => design.stock <= 0);
+  });
+
+  const countLowStock = lowStockProducts.length;
+  const countOutOfStock = outOfStockProducts.length;
+
+  return {
+    countLowStock,
+    countOutOfStock
+  };
+};
+
+// Luego, puedes llamar a esta función donde necesites mostrar la cantidad de productos con stock bajo y sin stock.
+const { countLowStock, countOutOfStock } = countLowStockAndOutOfStockProducts();
+
   
   
 
@@ -87,13 +138,14 @@ const Index = ({products}) => {
                 Todos los productos
               </span>
             </div>
-            <div className="flex flex-col gap-3 p-10   w-full  md:w-3/12 sm:border-y-2  md:border-x-2 md:border-y-0">
+            <div className="flex flex-col gap-3 p-7   w-full  md:w-3/12 sm:border-y-2  md:border-x-2 md:border-y-0">
               <span className="font-semibold text-green-600 text-base">
                 Stock Total
               </span>
               <div className="flex gap-8">
                 <div className="flex flex-col">
                   <span className="font-semibold text-gray-600 text-base">
+                    {totalStock}
                   </span>
                   <span className="font-thin text-gray-400 text-xs">
                     Stock
@@ -101,7 +153,7 @@ const Index = ({products}) => {
                 </div>
                 <div className="flex flex-col">
                   <span className="font-semibold text-gray-600 text-base">
-                     {/* ${calcularValorTotalStock()}   */}
+                      {(totalPrice).toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })}
                   </span>
                   <span className="font-thin text-gray-400 text-xs">
                     Valor
@@ -116,7 +168,7 @@ const Index = ({products}) => {
               <div className="flex gap-8">
                 <div className="flex flex-col">
                   <span className="font-semibold text-yellow-600 text-base">
-                  {/* {contarUnidadesPorEstado("Stock Bajo")}  */}
+                  {countLowStock}
                   </span>
                   <span className="font-thin text-gray-400 text-xs">
                     Stock Bajo
@@ -124,7 +176,7 @@ const Index = ({products}) => {
                 </div>
                 <div className="flex flex-col">
                   <span className="font-semibold text-red-600 text-base">
-                  {/* {contarUnidadesPorEstado("Sin Stock")} */}
+                  {countOutOfStock}
                   </span>
                   <span className="font-thin text-gray-400 text-xs">
                     Sin Stock

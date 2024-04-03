@@ -17,8 +17,9 @@ const Index = ({sales, products}) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [filteredSales, setFilteredSales] = useState([]);
+  const [mostUsedPaymentMethod, setMostUsedPaymentMethod] = useState('');
+  const [mostUsedSalesChannel, setMostUsedSalesChannel] = useState('');
 
- 
 
    // Modal de confirmación para eliminar un ítem
   const showDeleteConfirmation = (id) => {
@@ -56,7 +57,76 @@ const Index = ({sales, products}) => {
       sale.product.toLowerCase().includes(searchTerm)
     );
     setFilteredSales(filteredSales);
+
+    // Encontrar el método de pago más utilizado
+    const paymentMethods = {};
+    filteredSales.forEach(sale => {
+      paymentMethods[sale.methodpay] = (paymentMethods[sale.methodpay] || 0) + 1;
+    });
+    const mostUsedPayment = Object.keys(paymentMethods).length > 0 ? Object.keys(paymentMethods).reduce((a, b) => paymentMethods[a] > paymentMethods[b] ? a : b) : 'sin ventas';
+    setMostUsedPaymentMethod(mostUsedPayment);
+
+    // Encontrar el canal de venta más utilizado
+    const salesChannels = {};
+    filteredSales.forEach(sale => {
+      salesChannels[sale.saleschannel] = (salesChannels[sale.saleschannel] || 0) + 1;
+    });
+    const mostUsedChannel = Object.keys(salesChannels).length > 0 ? Object.keys(salesChannels).reduce((a, b) => salesChannels[a] > salesChannels[b] ? a : b) : 'sin ventas';
+    setMostUsedSalesChannel(mostUsedChannel);
   }, [searchTerm, sales]);
+
+  // Agrupar ventas por producto y sumar su stock
+  const salesByProduct = sales && sales.length > 0 ? sales.reduce((acc, sale) => {
+    const { product, stock } = sale;
+    if (acc[product]) {
+      acc[product].stock += stock;
+    } else {
+      acc[product] = { ...sale };
+    }
+    return acc;
+  }, {}) : {};
+
+// Calcular el valor total de cada venta y encontrar la venta con el mayor valor
+let maxSaleValue = 0;
+let maxSaleProduct = 'sin ventas';
+
+filteredSales.forEach(sale => {
+  const saleValue = sale.price * sale.stock;
+  if (saleValue > maxSaleValue) {
+    maxSaleValue = saleValue;
+    maxSaleProduct = sale.product;
+  }
+});
+
+// Calcular el valor total de cada venta y encontrar la venta con el menor valor
+let minSaleValue = 0;
+let minSaleProduct = 'sin ventas';
+
+filteredSales.forEach(sale => {
+  const saleValue = sale.price * sale.stock;
+  if (saleValue < minSaleValue) {
+    minSaleValue = saleValue;
+    minSaleProduct = sale.product;
+  }
+});
+
+
+
+// Convertir las ventas agrupadas en un array
+const salesArray = Object.values(salesByProduct);
+
+// Ordenar las ventas por stock
+const sortedSales = salesArray.sort((a, b) => b.stock - a.stock);
+   const topSaleWithStock = sortedSales[0];
+   const secondTopSaleWithStock = sortedSales[1];
+   const thirdTopSaleWithStock = sortedSales[2];
+   const fourthTopSaleWithStock = sortedSales[3];
+   const fifthTopSaleWithStock = sortedSales[4];
+   const sixthTopSaleWithStock = sortedSales[5];
+   const seventhTopSaleWithStock = sortedSales[6];
+   const eighthTopSaleWithStock = sortedSales[7];
+   const ninthTopSaleWithStock = sortedSales[8];
+   const tenthTopSaleWithStock = sortedSales[9];
 
   return (
     <div>
@@ -66,96 +136,109 @@ const Index = ({sales, products}) => {
         <div className="bg-white rounded p-3">
             <span className="font-bold px-4">Control de Ventas</span>
             <div className=" flex flex-col md:flex-row justify-center items-center">
-                <div className="flex flex-col p-10  w-full  md:w-3/12  ">
-                <span className="font-semibold text-blue-600 text-base">
-                    Top 10 Últimos 30 días 
+                <div className="flex flex-col p-2  w-full  md:w-3/12  ">
+                <span className="font-semibold text-center text-blue-600 text-base">
+                    Top 10 Más Vendidos
                 </span>
-                <span className="font-semibold text-gray-600 text-2xl">
-                #1 Remeras
+                <span className="font-semibold text-black text-base">
+                #1 {topSaleWithStock && topSaleWithStock.product ? (`${topSaleWithStock.product} `) : "Realiza tu primera venta"}
                 </span>
-                <span className="font-semibold text-gray-600 text-xl">
-                #2 Gorras
-                </span>
-                <span className="font-semibold text-gray-600 text-lg">
-                #3 Almohadones
+                <span className="font-semibold text-gray-800 text-base">
+                #2 {secondTopSaleWithStock && secondTopSaleWithStock.product ? (`${secondTopSaleWithStock.product} `) : "Faltan más ventas"}
                 </span>
                 <span className="font-semibold text-gray-600 text-base">
-                #4 Parches
+                #3 {thirdTopSaleWithStock && thirdTopSaleWithStock.product ? (`${thirdTopSaleWithStock.product} `) : "Faltan más ventas"}
                 </span>
-                <span className="font-semibold text-gray-600 text-xs">
-                #5 Otro, #6 Otro, #7 Otro, <br/>
-                #8 Otro, #9 Otro, #10 Otro.
+                <span className="font-semibold text-gray-600 text-sm">
+                #4 {fourthTopSaleWithStock && fourthTopSaleWithStock.product ? (`${fourthTopSaleWithStock.product} `) : "Faltan más ventas "}
                 </span>
+                 <span className="font-semibold text-gray-600 text-xs">
+                #5 {fifthTopSaleWithStock && fifthTopSaleWithStock.product ? (`${fifthTopSaleWithStock.product}, `) : "N/a, "}
+                #6 {sixthTopSaleWithStock && sixthTopSaleWithStock.product ? (`${sixthTopSaleWithStock.product}, `) : "N/a, "}
+                #7 {seventhTopSaleWithStock && seventhTopSaleWithStock.product ? (`${seventhTopSaleWithStock.product}, `) : "N/a, "} <br/>
+                #8 {eighthTopSaleWithStock && eighthTopSaleWithStock.product ? (` ${eighthTopSaleWithStock.product}, `) : "N/a, "}  
+                #9 {ninthTopSaleWithStock && ninthTopSaleWithStock.product ? (` ${ninthTopSaleWithStock.product}, `) : "N/a, "} 
+                #10 {tenthTopSaleWithStock && tenthTopSaleWithStock.product ? (` ${tenthTopSaleWithStock.product}. `) : "N/a."} 
+                </span> 
                 
-                <span className="font-thin text-gray-400 text-xs">
+                <span className="font-thin text-center text-gray-400 text-xs">
                     Productos más vendidos del Mes
                 </span>
                 </div>
-                <div className="flex flex-col gap-3 p-10   w-full  md:w-3/12 sm:border-y-2  md:border-x-2 md:border-y-0">
-                <span className="font-semibold text-green-600 text-base">
-                    Stock Total
+                <div className="flex flex-col gap-2 items-center  w-full  md:w-3/12 sm:border-y-2  md:border-x-2 md:border-y-0">
+                <span className="font-semibold text-center text-green-600 text-base">
+                    Mejor Venta
                 </span>
-                <div className="flex gap-8">
+                <span className="text-center font-light text-teal-600 text-xs">
+                    🔥
+                </span>
+                <div className="flex gap-2 ">
                     <div className="flex flex-col">
-                    <span className="font-semibold text-gray-600 text-base">
-                    {/* {totalStockUp}  */}
+                    <span className="font-semibold text-gray-600 text-center text-sm">
+                     {maxSaleProduct}
                     </span>
-                    <span className="font-thin text-gray-400 text-xs">
-                        Suma de stock
+                    <span className=" text-center font-thin text-gray-400 text-xs">
+                        Ganador
                     </span>
                     </div>
                     <div className="flex flex-col">
-                    <span className="font-semibold text-gray-600 text-base">
-                        {/* ${totalPriceUp}  */}
+                    <span className="text-center font-semibold text-green-600 text-base">
+                        ${maxSaleValue} 
                     </span>
-                    <span className="font-thin text-gray-400 text-xs">
+                    <span className="text-center font-thin text-gray-400 text-xs">
                         Valor Total
                     </span>
                     </div>
                 </div>
                 </div>
-                <div className="flex flex-col gap-3 p-10  w-full  md:w-3/12  border-y-2  md:border-x-2 md:border-y-0">
+                <div className="flex flex-col gap-2 items-center  w-full  md:w-3/12  border-y-2  md:border-x-2 md:border-y-0">
                 <span className="font-semibold text-yellow-600 text-base">
-                    Stock Bajo
+                  Venta más Baja
                 </span>
-                <div className="flex gap-8">
+                <span className="text-center font-light text-amber-400 text-xs">
+                    ✍
+                </span>
+                <div className="flex gap-2">
                     <div className="flex flex-col">
-                    <span className="font-semibold text-yellow-600 text-base">
-                    {/* {countProductsLowStock}  */}
+                    <span className="font-semibold text-center text-gray-600 text-sm">
+                    {minSaleProduct}  
                     </span>
-                    <span className="font-thin text-gray-400 text-xs">
-                        Stock Bajo
+                    <span className="text-center font-thin text-gray-400 text-xs">
+                        Revisar
                     </span>
                     </div>
                     <div className="flex flex-col">
-                    <span className="font-semibold text-red-600 text-base">
-                    {/* {countProductsNoStock}  */}
+                    <span className="text-center font-semibold text-yellow-600 text-base">
+                    ${minSaleValue}
                     </span>
-                    <span className="font-thin text-gray-400 text-xs">
-                        Sin Stock
+                    <span className=" text-center font-thin text-gray-400 text-xs">
+                    Valor Total
                     </span>
                     </div>
                 </div>
                 </div>
-                <div className="flex flex-col gap-3 p-10  w-full  md:w-3/12  border-y-2  md:border-x-2 md:border-y-0">
+                <div className="flex flex-col gap-2 items-center w-full  md:w-3/12  border-y-2  md:border-x-2 md:border-y-0">
                 <span className="font-semibold text-red-600 text-base">
-                    Sin Definir
+                    Más usados
                 </span>
-                <div className="flex gap-8">
+                <span className="text-center font-light text-amber-400 text-xs">
+                    🛒
+                </span>
+                <div className="flex gap-2">
                     <div className="flex flex-col">
-                    <span className="font-semibold text-gray-600 text-base">
-                        0
+                    <span className="font-semibold text-center text-gray-600 text-sm">
+                        {mostUsedSalesChannel}
                     </span>
-                    <span className="font-thin text-gray-400 text-xs">
-                        Ordenado
+                    <span className="font-thin text-center text-gray-400 text-xs">
+                        Canal de ventas
                     </span>
                     </div>
                     <div className="flex flex-col">
-                    <span className="font-semibold text-gray-600 text-base">
-                        0
+                    <span className="font-semibold text-center text-gray-600 text-sm">
+                        {mostUsedPaymentMethod}
                     </span>
-                    <span className="font-thin text-gray-400 text-xs">
-                        Sin Stock
+                    <span className="font-thin text-center text-gray-400 text-xs">
+                        Método de pago
                     </span>
                     </div>
                 </div>
@@ -363,7 +446,6 @@ const Index = ({sales, products}) => {
              ))}
             </tbody>
           </table>
-          
         </div>
       </div>
     </div>
