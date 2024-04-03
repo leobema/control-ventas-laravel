@@ -73,7 +73,7 @@ export default function Dashboard({ auth }) {
         >
             <Head title="Dashboard" />
 
-            <div className="grid grid-cols-1 col-span-12 lg:col-span-10 gap-6 md:grid-cols-3 lg:grid-cols-4  p-4 ">
+      <div className="grid grid-cols-1 col-span-12 lg:col-span-10 gap-6 md:grid-cols-3 lg:grid-cols-4  p-4 ">
         <article className="flex flex-col gap-4 rounded-lg border  border-gray-100 bg-white p-6  ">
           <div className="inline-flex gap-2 self-end rounded bg-green-100 p-1 text-green-600">
             <svg
@@ -212,40 +212,35 @@ export default function Dashboard({ auth }) {
             </p>
           </div>
         </article>
-        <div className="grid grid-cols-1 w-full  content-end">
-          <label
-              className=""
-              htmlFor="dateDashboard"
-              >
-              Período
-          </label>
-              <input
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                type="date"
-                id=""
-                name=""
-              />
-      </div>
-        <div className="grid grid-cols-4 w-full bg-white rounded-lg py-8 col-span-full justify-center">
-        <div className="grid grid-cols-1 w-full max-h-md">
-              <Chart 
-                  options={chart.options}
-                  series={chart.series}
-                  type="bar"
-                  height="100%"
-                />
-            </div>
-          
-         
-          <div className="grid grid-cols-2 w-full max-w-md">
-  
-            <Doughnut data={data} />
-            
-          </div>
-           
+        <div className="grid grid-cols-1 w-full content-end">
+    <label htmlFor="dateDashboard">Período</label>
+    <input
+      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+      type="date"
+      id="dateDashboard"
+      name="dateDashboard"
+    />
+  </div>
 
-      </div>
-      </div>
+  {/* Contenido de los gráficos */}
+  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full col-span-full">
+    <div className="w-full max-h-md">
+      {/* Ajusta las clases de Chart para que se ajuste al ancho y alto correctamente */}
+      <Chart
+        options={chart.options}
+        series={chart.series}
+        type="bar"
+        height="100%"
+        className="w-full aspect-w-4 aspect-h-4"
+      />
+    </div>
+
+    <div className="w-full max-h-md">
+      {/* Ajusta las clases de Doughnut para que se ajuste al ancho y alto correctamente */}
+      <Doughnut data={data} className="w-full h-full" />
+    </div>
+  </div>
+</div>
         </AuthenticatedLayout>
     );
 }
