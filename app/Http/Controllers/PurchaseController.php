@@ -6,18 +6,27 @@ use App\Models\Purchase;
 use App\Models\Dbpriceitem;
 use Illuminate\Http\Request;
 use Inertia\Inertia; 
+use Illuminate\Support\Facades\Auth;
+
 
 class PurchaseController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-
-        $purchases = Purchase::latest()->get();
-        $dbpriceitems = Dbpriceitem::latest()->get();
-        return Inertia::render('Purchases/Index', ['purchases' => $purchases, 'dbpriceitems' => $dbpriceitems]);
+        // Obtener el ID del usuario autenticado actualmente
+        $userId = Auth::id();
+    
+        $purchases = Purchase::where('user_id', $userId)->latest()->get();
+        $dbpriceitems = Dbpriceitem::where('user_id', $userId)->latest()->get();
+    
+        // Retornar la vista con las compras y elementos de precio
+        return Inertia::render('Purchases/Index', [
+            'purchases' => $purchases,
+            'dbpriceitems' => $dbpriceitems
+        ]);
     }
 
     /**
@@ -33,7 +42,7 @@ class PurchaseController extends Controller
             'description' => 'required'
         ]);
     
-        Purchase::create($validatedData);
+        $request->user()->purchases()->create($validatedData);
         return redirect()->route('purchases.index');
     }
 

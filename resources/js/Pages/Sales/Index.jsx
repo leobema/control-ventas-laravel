@@ -29,7 +29,7 @@ const Index = ({sales, products}) => {
 
   const deleteSale = () => {
     router.delete(`/sales/${selectedsaleDeleteId}`)
-    setShowDeleteModal(false);
+    setShowDeleteModal(false); 
   }; 
   
 
@@ -99,7 +99,7 @@ filteredSales.forEach(sale => {
 });
 
 // Calcular el valor total de cada venta y encontrar la venta con el menor valor
-let minSaleValue = 0;
+let minSaleValue = filteredSales.length > 0 ? Infinity : 0;
 let minSaleProduct = 'sin ventas';
 
 filteredSales.forEach(sale => {
@@ -109,7 +109,6 @@ filteredSales.forEach(sale => {
     minSaleProduct = sale.product;
   }
 });
-
 
 
 // Convertir las ventas agrupadas en un array

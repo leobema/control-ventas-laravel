@@ -54,6 +54,12 @@ export default function Authenticated({ user, header, children }) {
                                 >
                                     Ventas 
                                 </NavLink>
+                                <NavLink 
+                                href={route('admin.index')} 
+                                active={route().current('admin.index')}
+                                >
+                                    Usuarios 
+                                </NavLink>
                             </div>
                             
                         </div>
@@ -152,6 +158,12 @@ export default function Authenticated({ user, header, children }) {
                         active={route().current('sales.index')}
                         >
                         Ventas 
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink 
+                        href={route('admin.index')} 
+                        active={route().current('admin.index')}
+                        >
+                        Usuarios
                         </ResponsiveNavLink>
                     </div>
 

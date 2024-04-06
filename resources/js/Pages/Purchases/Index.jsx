@@ -310,13 +310,13 @@ const Index = ({purchases, dbpriceitems}) => {
                      {purchase.name}
                     </td>
                     <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                    {purchase.price}
+                    ${purchase.price}
                     </td>
                     <td className="whitespace-nowrap px-4 py-2 text-gray-700">
                     {purchase.stock}
                     </td>
                     <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                    N/A
+                    ${purchase.stock * purchase.price}
                     </td>
                     <td className="whitespace-nowrap px-4 py-2 text-gray-700">
                     {purchase.date}

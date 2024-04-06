@@ -18,14 +18,14 @@ const UpdateSale = ({ saleData }) => {
     description: saleData.description,
   });
 
-console.log(saleData)
 
 const [open, setOpen] = useState(true);
-const cancelButtonRef = useRef(null);
+const cancelButtonRef = useRef(null); 
 
 const submit = (e) => {
     e.preventDefault()
-    patch(route('sales.update', { sale: saleData.id }), {onSuccess: ()=> {
+    patch(route('sales.update', { sale: saleData.id }), {
+      onSuccess: ()=> {
       reset(); 
       setOpen(false);
     }

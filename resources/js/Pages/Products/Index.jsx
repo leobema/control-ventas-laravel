@@ -375,7 +375,7 @@ const { countLowStock, countOutOfStock } = countLowStockAndOutOfStockProducts();
                     {product.designs && product.designs.length > 0 ? (
                     product.designs.map(design => (
                         <div key={design.id}>
-                            {design.price}
+                            ${design.price}
                         </div>
                     ))
                 ) : (
@@ -386,7 +386,7 @@ const { countLowStock, countOutOfStock } = countLowStockAndOutOfStockProducts();
                     {product.designs && product.designs.length > 0 ? (
                     product.designs.map(design => (
                         <div key={design.id}>
-                            {design.price * design.stock}
+                            ${design.price * design.stock}
                         </div>
                     ))
                 ) : (
@@ -412,7 +412,7 @@ const { countLowStock, countOutOfStock } = countLowStockAndOutOfStockProducts();
                         </div>
                     ))
                 ) : (
-                    'No Stock Status'
+                    'No Status'
                 )}
                     </td>
                     <td className="whitespace-nowrap px-4 py-2 text-gray-700">

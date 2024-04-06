@@ -18,5 +18,13 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+        /*  User::factory(10)->create()->each(function($user){
+            $user->assignRole('usuario')
+        });  */
+
+        $this->call(RoleSeeder::class);
+        $this->call(UserSeeder::class);
+
+
     }
 }

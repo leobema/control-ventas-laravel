@@ -1,7 +1,7 @@
 import { Fragment, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import InputError from '@/Components/InputError'
-import { useForm, usePage } from '@inertiajs/react'
+import { useForm } from '@inertiajs/react'
 import { ArrowLongUpIcon } from "@heroicons/react/24/outline"; 
 import PrimaryButton from "./PrimaryButton";
 
@@ -11,7 +11,7 @@ const UpdateSale = ({purchaseData}) => {
     price: purchaseData.price,
     stock: purchaseData.stock,
     date: purchaseData.date,
-    description: purchaseData.description,
+    description: purchaseData.description,  
   });
 
 //console.log(saleData)

@@ -231,7 +231,8 @@ const submit = (e) => {
                                     onChange={(e) => setData('saleschannel', e.target.value)}
                                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                   >
-                                     <option value="Mercadolibre">Mercadolibre</option>
+                                      <option value="">Seleccionar</option>
+                                      <option value="Mercadolibre">Mercadolibre</option>
                                       <option value="Pág Web">Pág Web</option>
                                       <option value="Facebook">Facebook</option>
                                       <option value="Instagram">Instagram</option>
@@ -251,7 +252,8 @@ const submit = (e) => {
                                     onChange={(e) => setData('methodpay', e.target.value)}
                                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                   >
-                                     <option value="Efectivo">Efectivo</option>
+                                      <option value="">Seleccionar</option>
+                                      <option value="Efectivo">Efectivo</option>
                                       <option value="Transferencia">Transferencia</option>
                                       <option value="MercadoPago">MercadoPago</option>
                                       <option value="MP Venta de ML">MP Venta de ML</option>

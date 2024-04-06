@@ -6,52 +6,62 @@ use App\Models\Product;
 use App\Models\Design;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
+
+        // Obtener el ID del usuario autenticado actualmente
+        $userId = Auth::id();
+
+        // Obtener los productos asociados al usuario autenticado
+        $products = $request->user()->products()->with('designs')->latest()->get();
+        
+        // Retornar la vista con los productos y sus relaciones
         return Inertia::render('Products/Index', [
-            'products' => Product::with('designs')->latest()->get()
+            'products' => $products
         ]);
     }
 
     public function store(Request $request)
     {
-        // Validar datos
-        $validated = $request->validate([
+        // Validar datos del producto
+        $validatedProduct = $request->validate([
             'product' => 'required|string|max:60',
             // Agrega aquí las validaciones necesarias para los otros campos de Product
         ]);
     
-        // Crear el nuevo producto
-        $product = new Product();
-        $product->product = $validated['product'];
-        $product->save();
+        // Crear el nuevo producto asociado al usuario autenticado
+        $product = $request->user()->products()->create($validatedProduct);
     
         // Verificar si se proporciona un diseño en la solicitud
         if ($request->has('design')) {
             $designData = $request->validate([
                 'design' => 'required|string', // Agrega aquí las validaciones necesarias para los otros campos de Design
                 'stock' => 'required|integer',
-                'price' => 'required|integer',
+                'price' => 'required|numeric', // Cambiado a 'numeric' para aceptar números decimales
                 'description' => 'required|string',
             ]);
     
             // Crear el nuevo diseño y asociarlo al producto
             $design = new Design();
-            $design->design = $designData['design'];
-            $design->stock = $designData['stock'];
-            $design->description = $designData['description'];
-            $design->price = $designData['price'];
-            // Completa aquí el resto de asignaciones de atributos para el modelo Design
+            $design->fill($designData);
+            $design->user_id = $request->user()->id; // Asignar el ID del usuario autenticado al diseño
             $product->designs()->save($design);
         }
     
-        // Redireccionar a alguna vista o acción deseada
+        // Redireccionar a la página de índice de productos
         return redirect()->route('products.index');
     }
+    
+
+    
+    
+    
+
 
     public function update(Request $request, Product $product)
     {
