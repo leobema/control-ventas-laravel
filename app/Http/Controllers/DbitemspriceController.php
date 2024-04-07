@@ -13,6 +13,7 @@ class DbitemspriceController extends Controller
     {
         $dbpriceitems = $request->user()->dbpriceitems()->latest()->get();
         return Inertia::render('Dbpriceitems/Index', ['dbpriceitems' => $dbpriceitems]);
+
     }
 
     public function store(Request $request) 

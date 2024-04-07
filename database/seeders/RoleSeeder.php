@@ -42,9 +42,26 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'dbpriceitems.update'])->syncRoles([$admin, $colaborador, $usuario]);
         Permission::create(['name' => 'dbpriceitems.destroy'])->syncRoles([$admin, $colaborador, $usuario]);
 
-        Permission::create(['name' => 'profile.edit'])->syncRoles([$admin]);
-        Permission::create(['name' => 'profile.update'])->syncRoles([$admin]);
-        Permission::create(['name' => 'profile.destroy'])->syncRoles([$admin]);
+        Permission::create(['name' => 'profile.edit'])->syncRoles([$admin, $colaborador, $usuario]);
+        Permission::create(['name' => 'profile.update'])->syncRoles([$admin, $colaborador, $usuario]);
+        Permission::create(['name' => 'profile.destroy'])->syncRoles([$admin, $colaborador, $usuario]);
+
+        Permission::create(['name' => 'admin.destroy'])->assignRole([$admin]);
+        Permission::create(['name' => 'admin.users.updateRole'])->assignRole([$admin]);
+        Permission::create(['name' => 'admin.users.updateByAdmin'])->assignRole([$admin]);
+
+        Permission::create(['name' => 'admin.users.index'])->assignRole([$admin]);
+        Permission::create(['name' => 'admin.users.create'])->assignRole([$admin]);
+        Permission::create(['name' => 'admin.users.store'])->assignRole([$admin]);
+        Permission::create(['name' => 'admin.index'])->assignRole([$admin]);
+
+
+
+
+
+
+
+
 
 
 

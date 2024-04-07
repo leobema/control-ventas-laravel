@@ -53,8 +53,8 @@ export default function Authenticated({ user, header, children }) {
                                 active={route().current('sales.index')}
                                 >
                                     Ventas 
-                                </NavLink>
-                                <NavLink 
+                                </NavLink>           
+                                <NavLink
                                 href={route('admin.index')} 
                                 active={route().current('admin.index')}
                                 >

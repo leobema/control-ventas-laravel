@@ -18,7 +18,7 @@ const Index = ({sales, products}) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [filteredSales, setFilteredSales] = useState([]);
   const [mostUsedPaymentMethod, setMostUsedPaymentMethod] = useState('');
-  const [mostUsedSalesChannel, setMostUsedSalesChannel] = useState('');
+  const [mostUsedSalesChannel, setMostUsedSalesChannel] = useState(''); 
 
 
    // Modal de confirmación para eliminar un ítem

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
+use App\Models\Product; 
 use App\Models\Design;
 use Illuminate\Http\Request;
 use Inertia\Inertia;

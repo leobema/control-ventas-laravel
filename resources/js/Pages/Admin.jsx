@@ -7,6 +7,7 @@ import { useForm } from '@inertiajs/react';
 import InputError from '@/Components/InputError';
 import PrimaryButton from "@/Components/PrimaryButton";
 import { router } from "@inertiajs/react";
+import AddUserByAdmin from "@/Components/AddUserByAdmin";
 
 const Admin = ({ users, roles}) => {
 
@@ -14,44 +15,27 @@ const Admin = ({ users, roles}) => {
     const [showChangeRolModal, setShowChangeRolModal] = useState(false);
     const [selectedUserId, setSelectedUserId] = useState(null);
     const [showEditModal, setShowEditModal] = useState(false);
+    const [showUserModal, setShowUserModal] = useState(false);
     const [selectedRoleId, setSelectedRoleId] = useState("");
     const [updateUser, setUpdateUser] = useState(null);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [selectedsaleDeleteId, setSelectedSaleDeleteId] = useState(null);
-
-
-    console.log('selectedRoleId', selectedRoleId)
-
-/*     const handleRoleChange = (e) => {
-        const newRoleId = e.target.value;
-        setSelectedRoleId(newRoleId);
-        console.log('newRoleId', newRoleId)
-           // Aquí puedes realizar cualquier lógica adicional necesaria
-    }; */
 
     const { data, setData, patch, processing, reset, errors } = useForm({
         name: '',
         email: '',
     });
 
-/*     const [changeRoleData, setChangeRoleData] = useState({
-        name: '', // o cualquier otro campo que necesites
-        rol: '', // o cualquier otro campo que necesites
-    });  
-
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setChangeRoleData({
-            ...changeRoleData,
-            [name]: value,
-        });
-    }; */
-
     // Modal de confirmación para eliminar un ítem
   const showDeleteConfirmation = (id) => {
     setShowDeleteModal(true);
     setSelectedSaleDeleteId(id); // Set the selected sale ID
   }; 
+
+    // Modal for sale User
+    const addUserModalSetting = () => {
+        setShowUserModal(prevState => !prevState);
+      };
 
 
   const deleteUser = (id) => {
@@ -98,6 +82,15 @@ const Admin = ({ users, roles}) => {
     
     return (
         <>
+         {showUserModal && (
+          <AddUserByAdmin
+          addUserModalSetting={addUserModalSetting}
+            users={users}
+            roles={roles}
+          />
+        )}
+
+
          {showDeleteModal && (
                     <Transition.Root show={true}>
                     <Dialog
@@ -317,7 +310,7 @@ const Admin = ({ users, roles}) => {
                                                     className="text-center block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md"
                                                 >
                                                     <option value="">Seleccionar Rol</option>
-                                                    {roles.original.filter(role => role.name !== 'admin').map(role => (
+                                                    {roles.original.filter(role => role.name).map(role => (
                                                         <option key={role.id} value={role.id}>{role.name}</option>
                                                     ))}
                                                 </select>
@@ -380,7 +373,7 @@ const Admin = ({ users, roles}) => {
                                 <div className="flex gap-4">
                                     <button
                                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold p-2 text-xs rounded"
-                                        // onClick={addSaleModalSetting}
+                                         onClick={addUserModalSetting}
                                     >
                                         Agregar Usuario
                                     </button>

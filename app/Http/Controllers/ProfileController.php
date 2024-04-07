@@ -32,6 +32,19 @@ class ProfileController extends Controller
         ]);
     }
 
+        public function adminIndex()
+    {
+        $profileController = new ProfileController();
+        $users = $profileController->filterAdminRoles(User::with('roles')->get());
+        $roles = $profileController->getAllRoles();
+
+        return Inertia::render('Admin', [
+            'users' => $users,
+            'roles' => $roles
+        ]);
+    }
+
+
     public function filterAdminRoles($users)
         {
             return $users->map(function($user) {
@@ -51,23 +64,19 @@ class ProfileController extends Controller
         public function updateRoleUser(Request $request, $userId): RedirectResponse
         {
             // Validar los datos recibidos si es necesario
-
-            // Imprimir o registrar el ID del usuario recibido
-            \Log::info('ID del usuario recibido:', ['userId' => $userId]);
+            if (!Auth::user()->hasRole('admin')) {
+                abort(403, 'No tienes permisos para realizar esta acción.');
+            }
         
             // Obtener el usuario
             $user = User::findOrFail($userId);
 
-            // Imprimir o registrar el usuario obtenido
-            \Log::info('Usuario obtenido:', ['user' => $user]);
         
             // Obtener el ID del nuevo rol desde la solicitud
             $newRoleId = $request->role_id;
         
             // Verificar si el valor de role_id se recibió correctamente
             if ($newRoleId) {
-                // Registra el valor de role_id para verificar si se recibe correctamente
-                \Log::info('Valor de role_id recibido correctamente: ' . $newRoleId);
         
                 // Asignar el nuevo rol al usuario
                 $user->roles()->sync([$newRoleId]); // Aquí pasas el ID del nuevo rol
@@ -103,6 +112,10 @@ class ProfileController extends Controller
     public function updateByAdmin(ProfileUpdateRequest $request, User $user): RedirectResponse
 {
     // Validar los datos recibidos si es necesario
+     // Verificar que el usuario autenticado tenga permisos de administrador
+     if (!Auth::user()->hasRole('admin')) {
+        abort(403, 'No tienes permisos para realizar esta acción.');
+    }
 
     // Llenar el modelo de usuario con los datos validados
     $user->fill($request->validated());
