@@ -6,8 +6,10 @@ use App\Models\Sale;
 use App\Models\Product;
 use App\Models\Design;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia; 
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 
 class SaleController extends Controller
@@ -31,17 +33,37 @@ class SaleController extends Controller
     
     public function store(Request $request)
 {
+    $today = Carbon::today()->format('Y-m-d');
     // Validar datos de la venta
     $validatedData = $request->validate([
         'product' => 'required',
         'design' => 'required',
         'client' => 'required',
-        'stock' => 'required|integer',
+        'stock' => [
+            'required',
+            'numeric',
+            function ($attribute, $value, $fail) {
+                if ($value < 0) {
+                    $fail('El stock no puede ser un número negativo.');
+                }
+            },
+        ],
         'saleschannel' => 'required',
         'methodpay' => 'required',
-        'price' => 'required|numeric',
-        'date' => 'required|date',
-        'description' => 'required',
+        'price' => [
+            'required',
+            Rule::notIn(['-1', '-2', '-3', '-4', '-5', '-6', '-7', '-8', '-9']),
+        ],
+        'date' =>  [
+            'required',
+            'date', 
+        function ($attribute, $value, $fail) use ($today) {
+            if ($value > $today) {
+                $fail('La fecha no puede ser superior a la fecha actual.');
+            }
+        },
+    ],
+        'description' => '',
     ]);
 
     // Crear la venta asociada al usuario autenticado
@@ -66,16 +88,35 @@ class SaleController extends Controller
 
 public function update(Request $request, Sale $sale)
 {
+    $today = Carbon::today()->format('Y-m-d');
     $validatedData = $request->validate([
         'product' => 'required',
         'design' => 'required',
         'client' => 'required',
-        'stock' => 'required|integer',
+        'stock' => [
+            'required',
+            'numeric',
+            function ($attribute, $value, $fail) {
+                if ($value < 0) {
+                    $fail('El stock no puede ser un número negativo.');
+                }
+            },
+        ],
         'saleschannel' => 'required',
         'methodpay' => 'required',
-        'price' => 'required|numeric',
-        'date' => 'required|date',
-        'description' => 'required',
+        'price' => [
+            'required',
+            Rule::notIn(['-1', '-2', '-3', '-4', '-5', '-6', '-7', '-8', '-9']),
+        ],
+        'date' =>  [
+            'required',
+            'date', 
+        function ($attribute, $value, $fail) use ($today) {
+            if ($value > $today) {
+                $fail('La fecha no puede ser superior a la fecha actual.');
+            }
+        },
+    ],
     ]);
 
     $sale->update($validatedData);

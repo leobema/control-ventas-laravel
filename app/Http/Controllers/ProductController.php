@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product; 
 use App\Models\Design;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 
@@ -28,6 +29,7 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
+       
         // Validar datos del producto
         $validatedProduct = $request->validate([
             'product' => 'required|string|max:60',
@@ -41,27 +43,32 @@ class ProductController extends Controller
         if ($request->has('design')) {
             $designData = $request->validate([
                 'design' => 'required|string', // Agrega aquí las validaciones necesarias para los otros campos de Design
-                'stock' => 'required|integer',
-                'price' => 'required|numeric', // Cambiado a 'numeric' para aceptar números decimales
-                'description' => 'required|string',
+                'stock' => [
+                    'required',
+                    'numeric',
+                    function ($attribute, $value, $fail) {
+                        if ($value < 0) {
+                            $fail('El stock no puede ser un número negativo.');
+                        }
+                    },
+                ],
+                'price' => [
+                    'required',
+                    'numeric',
+                    'min:0',
+                ], 
+                'description' => '',
             ]);
     
-            // Crear el nuevo diseño y asociarlo al producto
-            $design = new Design();
-            $design->fill($designData);
-            $design->user_id = $request->user()->id; // Asignar el ID del usuario autenticado al diseño
-            $product->designs()->save($design);
+        } else {
+            // Si no se proporciona 'design', devuelve una respuesta de error o redirige según sea necesario
+            return response()->json(['error' => 'El campo design es obligatorio'], 422);
         }
     
         // Redireccionar a la página de índice de productos
         return redirect()->route('products.index');
     }
     
-
-    
-    
-    
-
 
     public function update(Request $request, Product $product)
     {
@@ -78,9 +85,20 @@ class ProductController extends Controller
         if ($request->has('design')) {
             $designData = $request->validate([
                 'design' => 'required|string', // Agrega aquí las validaciones necesarias para los otros campos de Design
-                'stock' => 'required|integer',
-                'price' => 'required|integer',
-                'description' => 'required|string',
+                'stock' => [
+                    'required',
+                    'numeric',
+                    function ($attribute, $value, $fail) {
+                        if ($value < 0) {
+                            $fail('El stock no puede ser un número negativo.');
+                        }
+                    },
+                ],
+                'price' => [
+                    'required',
+                    'numeric',
+                    'min:0',
+                ],
             ]);
     
             // Obtener el diseño asociado al producto o crear uno nuevo si no existe

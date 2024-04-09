@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('name');
-            $table->integer('stock');
+            $table->double('stock', 6, 1);
             $table->date('date');
             $table->double('price', 8, 2);
             $table->timestamps();
-            $table->string('description');
+            $table->string('description')->nullable(); 
         });
     }
 

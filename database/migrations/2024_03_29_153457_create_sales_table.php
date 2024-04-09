@@ -17,9 +17,9 @@ return new class extends Migration
             $table->string('product');
             $table->string('design');
             $table->string('client');
-            $table->integer('stock');
+            $table->double('stock', 6, 1);
             $table->double('price', 8, 2);
-            $table->string('description');
+            $table->string('description')->nullable(); 
             $table->string('saleschannel');
             $table->string('methodpay');
             $table->date('date');

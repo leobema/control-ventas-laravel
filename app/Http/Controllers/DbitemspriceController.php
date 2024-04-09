@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Dbpriceitem;
+use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -20,7 +21,10 @@ class DbitemspriceController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'required',
-            'price' => 'required',
+            'price' => [
+                'required',
+                Rule::notIn(['-1', '-2', '-3', '-4', '-5', '-6', '-7', '-8', '-9']),
+            ],
         ]);
 
         
@@ -37,7 +41,10 @@ class DbitemspriceController extends Controller
 
         $validatedData = $request->validate([
             'name' => 'required',
-            'price' => 'required',
+            'price' => [
+                'required',
+                Rule::notIn(['-1', '-2', '-3', '-4', '-5', '-6', '-7', '-8', '-9']),
+            ],
         ]);
 
         
