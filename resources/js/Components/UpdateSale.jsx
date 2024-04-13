@@ -5,7 +5,7 @@ import { useForm } from '@inertiajs/react'
 import { ArrowLongUpIcon } from "@heroicons/react/24/outline"; 
 import PrimaryButton from "./PrimaryButton";
 
-const UpdateSale = ({ saleData }) => {
+const UpdateSale = ({ saleData, closeUpdateModal }) => {
   const { data, setData, patch, processing, reset, errors } = useForm({
     product: saleData.product,
     design: saleData.design,
@@ -28,6 +28,7 @@ const submit = (e) => {
       onSuccess: ()=> {
       reset(); 
       setOpen(false);
+      closeUpdateModal();
     }
   });
 } 
@@ -202,7 +203,7 @@ function getCurrentDate() {
                             <input
                               type="number"
                               value={data.price}
-                              onChange={ (e)=> setData('price', e.target.value)}
+                              onChange={ (e)=> setData('price', e.target.value)} 
                               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                               placeholder="$299"
                             />
@@ -256,7 +257,7 @@ function getCurrentDate() {
                           <button
                             type="button"
                             className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                            onClick={() => setOpen(false)}
+                            onClick={closeUpdateModal}
                           >
                             Cancelar
                           </button>

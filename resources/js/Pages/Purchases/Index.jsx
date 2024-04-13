@@ -43,7 +43,9 @@ const Index = ({purchases, dbpriceitems}) => {
     setFilteredPurchases(filteredPurchases.filter(purchase => purchase.id !== selectedSaleDeleteId));
   };
   
-
+  const closeUpdateModal = () => {
+    setShowUpdateModal(false); // Establece el estado en false al cerrar el modal
+  };
 
   // Modal for sale ADD
   const addSaleModalSetting = () => {
@@ -182,14 +184,15 @@ const Index = ({purchases, dbpriceitems}) => {
         {showUpdateModal && (
            <UpdatePurchase
             purchaseId={selectedPurchseId} 
-            purchaseData={updatePurchase}
+            purchaseData={updatePurchase} 
             updateModalSetting={updateSaleModalSetting}
+            closeUpdateModal={closeUpdateModal}
           /> 
           )} 
 
           {/* Modal de confirmación para eliminar */} 
         {showDeleteModal && (
-                    <Transition.Root show={true}>
+                    <Transition.Root show={true}> 
                     <Dialog
                         as="div"
                         className="fixed inset-0 overflow-y-auto flex items-center justify-center"
@@ -283,7 +286,10 @@ const Index = ({purchases, dbpriceitems}) => {
                   Item
                 </th>
                 <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                  Precio
+                  Proveedor
+                </th>
+                <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
+                  Precio/Medida
                 </th>
                 <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
                   Cant
@@ -309,8 +315,11 @@ const Index = ({purchases, dbpriceitems}) => {
                      <td className="whitespace-nowrap px-4 py-2  text-gray-900">
                      {purchase.name}
                     </td>
+                    <td className="whitespace-nowrap px-4 py-2  text-gray-900">
+                     {purchase.proveedor}
+                    </td>
                     <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                    ${purchase.price}
+                    ${purchase.price}/{purchase.medida}
                     </td>
                     <td className="whitespace-nowrap px-4 py-2 text-gray-700">
                     {purchase.stock}

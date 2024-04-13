@@ -3,12 +3,14 @@ import { Dialog, Transition } from "@headlessui/react";
 import InputError from '@/Components/InputError'
 import { useForm, usePage } from '@inertiajs/react'
 import { ArrowLongUpIcon } from "@heroicons/react/24/outline"; 
-import PrimaryButton from "./PrimaryButton";
+import PrimaryButton from "./PrimaryButton"; 
 
-const UpdateSale = ({updatePricetData}) => {
+const UpdateSale = ({updatePricetData, closeUpdateModal}) => {
   const { data, setData, patch, processing, reset, errors } = useForm({
     name: updatePricetData.name,
     price: updatePricetData.price,
+    proveedor: updatePricetData.proveedor,
+    medida: updatePricetData.medida,
   });
 
 console.log(updatePricetData)
@@ -21,6 +23,7 @@ const submit = (e) => {
     patch(route('dbpriceitems.update', { dbpriceitem: updatePricetData.id }), {onSuccess: ()=> {
       reset(); 
       setOpen(false);
+      closeUpdateModal();
     }
   } );
 } 
@@ -92,6 +95,21 @@ const submit = (e) => {
                                   />
                           </div>
                         </div>
+                        <div className="col-span-2">
+                            <label
+                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            >
+                              Proveedor
+                            </label>
+                            <InputError message={errors.proveedor} customMessage="Este campo es obligatorio." className='mt-2'/>
+                            <input
+                              type="text"
+                              value={data.proveedor}
+                              onChange={ (e)=> setData('proveedor', e.target.value)}
+                              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                              placeholder="Ej. Crisa"
+                            />
+                          </div>
                         <div className="grid gap-4 mb-4 sm:grid-cols-2">
                            <div>
                             <label
@@ -109,6 +127,21 @@ const submit = (e) => {
                             />
                           </div>
                         </div>
+                        <div className="col-span-2">
+                            <label
+                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            >
+                              Unidad
+                            </label>
+                            <InputError message={errors.medida} customMessage="Este campo es obligatorio." className='mt-2'/>
+                            <input
+                              type="text" 
+                              value={data.medida}
+                              onChange={ (e)=> setData('medida', e.target.value)}
+                              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                              placeholder="Ej. mt, kg"
+                            />
+                          </div>
                         <div className=" px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                           <PrimaryButton
                             className="mt-4 inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto"
@@ -119,7 +152,7 @@ const submit = (e) => {
                           <button
                             type="button"
                             className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                            onClick={() => setOpen(false)}
+                            onClick={closeUpdateModal}
                           >
                             Cancelar
                           </button>

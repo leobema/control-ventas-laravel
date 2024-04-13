@@ -52,7 +52,8 @@ class SaleController extends Controller
         'methodpay' => 'required',
         'price' => [
             'required',
-            Rule::notIn(['-1', '-2', '-3', '-4', '-5', '-6', '-7', '-8', '-9']),
+            'numeric', // Asegura que el valor sea numérico
+            'gt:0', // Asegura que el valor sea mayor que cero
         ],
         'date' =>  [
             'required',
@@ -106,7 +107,8 @@ public function update(Request $request, Sale $sale)
         'methodpay' => 'required',
         'price' => [
             'required',
-            Rule::notIn(['-1', '-2', '-3', '-4', '-5', '-6', '-7', '-8', '-9']),
+            'numeric', // Asegura que el valor sea numérico
+            'gt:0', // Asegura que el valor sea mayor que cero
         ],
         'date' =>  [
             'required',

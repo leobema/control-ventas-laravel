@@ -70,6 +70,10 @@ const Index = ({products}) => {
     setShowProductModal(prevState => !prevState);
   };
 
+  const closeUpdateModal = () => {
+    setShowUpdateModal(false); // Establece el estado en false al cerrar el modal
+  };
+
    // Modal for Product UPDATE
   const updateProductModalSetting = (productId) => {
     setSelectedProductId(productId);
@@ -221,6 +225,7 @@ const { countLowStock, countOutOfStock } = countLowStockAndOutOfStockProducts();
             productId={selectedProductId}
             productData={updateProduct}
             updateModalSetting={updateProductModalSetting}
+            closeUpdateModal={closeUpdateModal}
           /> 
           )}
 
@@ -326,10 +331,19 @@ const { countLowStock, countOutOfStock } = countLowStockAndOutOfStockProducts();
                   Stock
                 </th>
                 <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
+                  Costo
+                </th>
+                <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
                   Precio
                 </th>
                 <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                 Valor/total
+                 Valor/Total
+                </th>
+                <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
+                  $ Utilidad
+                </th>
+                <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
+                  Margen % 
                 </th>
                 <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
                 Observación
@@ -375,6 +389,18 @@ const { countLowStock, countOutOfStock } = countLowStockAndOutOfStockProducts();
                     {product.designs && product.designs.length > 0 ? (
                     product.designs.map(design => (
                         <div key={design.id}>
+                            ${design.cost}
+                        </div>
+                    ))
+                ) : (
+                    'No Cost'
+                )}
+                    </td>
+                   
+                    <td className="whitespace-nowrap px-4 py-2 text-gray-700">
+                    {product.designs && product.designs.length > 0 ? (
+                    product.designs.map(design => (
+                        <div key={design.id}>
                             ${design.price}
                         </div>
                     ))
@@ -382,6 +408,7 @@ const { countLowStock, countOutOfStock } = countLowStockAndOutOfStockProducts();
                     'No Price'
                 )}
                     </td>
+                    
                     <td className="whitespace-nowrap px-4 py-2 text-gray-700">
                     {product.designs && product.designs.length > 0 ? (
                     product.designs.map(design => (
@@ -391,6 +418,28 @@ const { countLowStock, countOutOfStock } = countLowStockAndOutOfStockProducts();
                     ))
                 ) : (
                     'N/A'
+                )}
+                    </td>
+                    <td className="whitespace-nowrap px-4 py-2 text-gray-700">
+                    {product.designs && product.designs.length > 0 ? (
+                    product.designs.map(design => (
+                        <div key={design.id}>
+                            ${(design.price * design.stock)-(design.cost * design.stock)} 
+                        </div>
+                    ))
+                ) : (
+                    'No Utilidad'
+                )}
+                    </td>
+                    <td className="whitespace-nowrap px-4 py-2 text-green-600">
+                    {product.designs && product.designs.length > 0 ? (
+                    product.designs.map(design => (
+                        <div key={design.id}>
+                            {((design.price * design.stock)/(design.cost * design.stock) * 100)-100}% 
+                        </div>
+                    ))
+                ) : (
+                    'No % Utilidad'
                 )}
                     </td>
                     <td className="whitespace-nowrap px-4 py-2 text-gray-700">

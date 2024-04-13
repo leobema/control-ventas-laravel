@@ -42,6 +42,10 @@ const Index = ({sales, products}) => {
   const updateSaleModalSetting = (saleId) => {
     setSelectedSaleId(saleId);
     setShowUpdateModal(true);
+
+    const closeUpdateModal = () => {
+      setShowUpdateModal(false); // Establece el estado en false al cerrar el modal
+    };
     
     // Lógica para mostrar el modal aquí
   }; 
@@ -160,7 +164,7 @@ const sortedSales = salesArray.sort((a, b) => b.stock - a.stock);
                 #10 {tenthTopSaleWithStock && tenthTopSaleWithStock.product ? (` ${tenthTopSaleWithStock.product}. `) : "N/a."} 
                 </span> 
                 
-                <span className="font-thin text-center text-gray-400 text-xs">
+                <span className="font-thin text-center text-gray-400 text-xs"> 
                     Productos más vendidos del Mes
                 </span>
                 </div>
@@ -257,6 +261,7 @@ const sortedSales = salesArray.sort((a, b) => b.stock - a.stock);
             saleId={selectedSaleId}
             saleData={updateSale}
             updateModalSetting={updateSaleModalSetting}
+            closeUpdateModal={closeUpdateModal}
           /> 
           )}
 

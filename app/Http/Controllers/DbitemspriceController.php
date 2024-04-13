@@ -21,12 +21,17 @@ class DbitemspriceController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'required',
+            'proveedor' => 'required',
             'price' => [
                 'required',
-                Rule::notIn(['-1', '-2', '-3', '-4', '-5', '-6', '-7', '-8', '-9']),
+                'numeric', // Asegura que el valor sea numérico
+                'gt:0', // Asegura que el valor sea mayor que cero
             ],
+            'medida' => 'required',
         ]);
 
+        // Registro del mensaje
+        info('Datos validados:', $validatedData);
         
         $request->user()->dbpriceitems()->create($validatedData);
 
@@ -41,10 +46,13 @@ class DbitemspriceController extends Controller
 
         $validatedData = $request->validate([
             'name' => 'required',
+            'proveedor' => 'required',
             'price' => [
                 'required',
-                Rule::notIn(['-1', '-2', '-3', '-4', '-5', '-6', '-7', '-8', '-9']),
+                'numeric', // Asegura que el valor sea numérico
+                'gt:0', // Asegura que el valor sea mayor que cero
             ],
+            'medida' => 'required',
         ]);
 
         

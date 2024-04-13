@@ -39,6 +39,8 @@ class PurchaseController extends Controller
         $today = Carbon::today()->format('Y-m-d');
         $validatedData = $request->validate([
             'name' => 'required',
+            'proveedor' => 'required',
+            'medida' => 'required',
             'price' =>[
                 'required',
                 Rule::notIn(['-1', '-2', '-3', '-4', '-5', '-6', '-7', '-8', '-9']),
@@ -77,6 +79,8 @@ class PurchaseController extends Controller
         $today = Carbon::today()->format('Y-m-d');
         $validatedData = $request->validate([
             'name' => 'required',
+            'proveedor' => 'required',
+            'medida' => 'required',
             'price' => [
                 'required',
                 Rule::notIn(['-1', '-2', '-3', '-4', '-5', '-6', '-7', '-8', '-9']),

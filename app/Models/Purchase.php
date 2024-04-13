@@ -16,6 +16,8 @@ class Purchase extends Model
     protected $fillable = [
         'name', 
         'price', 
+        'proveedor',
+        'medida',
         'stock', 
         'date',
         'description'

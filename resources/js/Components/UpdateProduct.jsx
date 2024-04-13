@@ -5,12 +5,15 @@ import { useForm } from '@inertiajs/react'
 import { ArrowLongUpIcon } from "@heroicons/react/24/outline"; 
 import PrimaryButton from "./PrimaryButton";
 
-const UpdateProduct = ({productId, productData}) => {
+const UpdateProduct = ({productId, productData, closeUpdateModal}) => {
     const {data, setData, patch, processing, reset, errors} = useForm({
         product: productData.product,
         design: productData.designs && productData.designs.length > 0
              ? productData.designs.map(design => design.design).join(', ')
              : '',
+        cost: productData.designs && productData.designs.length > 0
+        ? productData.designs.map(design => design.cost).join(', ')
+        : '',
         price: productData.designs && productData.designs.length > 0
         ? productData.designs.map(design => design.price).join(', ')
         : '',
@@ -30,6 +33,7 @@ const UpdateProduct = ({productId, productData}) => {
         patch(route('products.update', {product: productId}), {onSuccess: ()=> {
           reset(); 
           setOpen(false);
+          closeUpdateModal();
         }
       });
     } 
@@ -146,6 +150,21 @@ const UpdateProduct = ({productId, productData}) => {
                             <label
                               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                             >
+                              Costo
+                            </label>
+                            <InputError message={errors.price} customMessage="Este campo es obligatorio." className='mt-2'/>
+                            <input
+                              type="number"
+                              value={data.cost}
+                              onChange={ (e)=> setData('cost', e.target.value)}
+                              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                              placeholder="$299"
+                            />
+                          </div>
+                          <div>
+                            <label
+                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            >
                               Precio
                             </label>
                             <InputError message={errors.price} customMessage="Este campo es obligatorio." className='mt-2'/>
@@ -191,7 +210,7 @@ const UpdateProduct = ({productId, productData}) => {
                           <button
                             type="button"
                             className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                            onClick={() => setOpen(false)} 
+                            onClick={closeUpdateModal}
                           >
                             Cancelar
                           </button>

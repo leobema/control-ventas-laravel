@@ -5,16 +5,16 @@ import { useForm } from '@inertiajs/react'
 import { ArrowLongUpIcon } from "@heroicons/react/24/outline"; 
 import PrimaryButton from "./PrimaryButton";
 
-const UpdateSale = ({purchaseData}) => {
+const UpdateSale = ({purchaseData, closeUpdateModal}) => {
   const { data, setData, patch, processing, reset, errors } = useForm({
     name: purchaseData.name,
+    proveedor: purchaseData.proveedor,
+    medida: purchaseData.medida,
     price: purchaseData.price,
     stock: purchaseData.stock,
     date: purchaseData.date,
     description: purchaseData.description,  
   });
-
-//console.log(saleData)
 
 const [open, setOpen] = useState(true);
 const cancelButtonRef = useRef(null);
@@ -25,6 +25,7 @@ const submit = (e) => {
       onSuccess: () => {
         reset(); 
         setOpen(false);
+        closeUpdateModal();
       }
     });  
 } 
@@ -110,24 +111,35 @@ function getCurrentDate() {
                             />
                             <InputError message={errors.name} className='mt-2'/> 
                           </div>
-                        </div>
-                        <div className="grid grid-flow-row gap-4 my-4 grid-cols-2">
                           <div className="col-span-2">
-                              <div className="grid gap-4 my-2 grid-cols-2">
-                                 <div className="col-span-2">
+                            <div className="grid gap-4 my-2 grid-cols-2">
+                              <div className="col-span-1">
+                                <label
+                                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                >
+                                  Proveedor
+                                </label>
+                                <input
+                                  disabled
+                                  value={data.proveedor}
+                                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                />
+                                <InputError message={errors.name} className='mt-2'/> 
+                              </div>
+                              <div className="col-span-1">
                                   <label
                                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                                   >
-                                    Precio 
+                                    Precio/Medida
                                   </label>
                                   <input
-                                    disabled
-                                    value={`$${data.price}`}
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                  />
+                                      disabled
+                                      value={`$${data.price}/${data.medida}`}
+                                      className="mr-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 flex-grow p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    />
                                     <InputError message={errors.price} className='mt-2'/> 
-                                </div>   
-                                <div>
+                              </div> 
+                              <div className="col-span-1">
                                   <label
                                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                                   >
@@ -141,27 +153,27 @@ function getCurrentDate() {
                                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                     placeholder="0 - 999"
                                   />
-                                </div>
+                              </div> 
+                              <div className="col-span-1">
+                                <label 
+                                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                >
+                                  Fecha
+                                </label>
+                                <InputError message={errors.date} className='mt-2'/> 
+                                <input
+                                  type="date"
+                                  value={data.date}
+                                  onChange={ (e)=> setData('date', e.target.value)}
+                                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                  placeholder=" - / - / -"
+                                  max={getCurrentDate()}
+                                />
                               </div>
-                          </div>
+                            </div>  
+                        </div>
                         </div>
                         <div className="grid gap-4 mb-4 sm:grid-cols-2">
-                          <div>
-                            <label 
-                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                            >
-                              Fecha
-                            </label>
-                            <InputError message={errors.date} className='mt-2'/> 
-                            <input
-                              type="date"
-                              value={data.date}
-                              onChange={ (e)=> setData('date', e.target.value)}
-                              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                              placeholder=" - / - / -"
-                              max={getCurrentDate()}
-                            />
-                          </div>
                           <div className="sm:col-span-2">
                             <label
                               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -177,11 +189,7 @@ function getCurrentDate() {
                               onChange={ (e)=> setData('description', e.target.value)}
                               maxLength={60}
                             >
-                              Standard glass, 3.8GHz 8-core 10th-generation
-                              Intel Core i7 processor, Turbo Boost up to 5.0GHz,
-                              16GB 2666MHz DDR4 memory, Radeon Pro 5500 XT with
-                              8GB of GDDR6 memory, 256GB SSD storage, Gigabit
-                              Ethernet, Magic Mouse 2, Magic Keyboard - US
+                              
                             </textarea>
                           </div>
                         </div>
@@ -195,7 +203,7 @@ function getCurrentDate() {
                           <button
                             type="button"
                             className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                            onClick={() => setOpen(false)}
+                            onClick={closeUpdateModal}
                           >
                             Cancelar
                           </button>

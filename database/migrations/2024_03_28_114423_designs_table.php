@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('design');
             $table->double('stock', 8, 1);
+            $table->double('cost', 8, 2);
             $table->double('price', 8, 2);
             $table->string('description')->nullable(); 
             $table->foreignId('product_id')->constrained()->onDelete('cascade');

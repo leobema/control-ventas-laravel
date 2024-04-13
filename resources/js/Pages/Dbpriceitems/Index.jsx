@@ -26,14 +26,19 @@ const [searchTerm, setSearchTerm] = useState('');
 
     const deletePrice = () => {
     router.delete(`/dbpriceitems/${selectedProductDeleteId}`)
-  setShowDeleteModal(false);
+  setShowDeleteModal(false); 
 };  
 
    // Modal for Product UPDATE
     const updateProductModalSetting = (id) => {
       setSelectedPriceId(id);
-      setShowUpdateModal(true);
-    } 
+      setShowUpdateModal(true); 
+    };
+    
+    const closeUpdateModal = () => {
+      setShowUpdateModal(false); // Establece el estado en false al cerrar el modal
+    };
+
 
     const filteredItems = dbpriceitems.filter(item =>
       item.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -63,7 +68,7 @@ const [searchTerm, setSearchTerm] = useState('');
 
           {showItemModal && (
           <AddPriceMp
-          addItemModalSetting={addItemModalSetting}
+          addItemModalSetting={addItemModalSetting} 
           />
         )}
          {showUpdateModal && (
@@ -71,6 +76,7 @@ const [searchTerm, setSearchTerm] = useState('');
             priceId={selectedPriceId}
             updatePricetData={updatePrice}
             updateModalSetting={updateProductModalSetting}
+            closeUpdateModal={closeUpdateModal}
           /> 
           )}  
 
@@ -169,7 +175,10 @@ const [searchTerm, setSearchTerm] = useState('');
                   Item
                 </th>
                 <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                  Precio
+                  Proveedor
+                </th>
+                <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
+                  Precio/Medida
                 </th>
                 <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
                   Última Act
@@ -183,11 +192,19 @@ const [searchTerm, setSearchTerm] = useState('');
              <tbody className="divide-y divide-gray-200">    
               {filteredItems.map(dbprice => (   
                   <tr key={dbprice.id}> 
-                    <td className="whitespace-nowrap px-4 py-2  text-gray-900">
+                    <td className="whitespace-nowrap px-4 py-2  text-gray-700">
                      {dbprice.name}
                     </td>
+                    <td className="whitespace-nowrap px-4 py-2  text-gray-700">
+                     {dbprice.proveedor}
+                    </td>
                     <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                    ${dbprice.price}
+                        <span className="inline-block mr-1">
+                            ${dbprice.price}
+                        </span>
+                        <span className="inline-block">
+                            /{dbprice.medida}
+                        </span>
                     </td>
                     <td className="whitespace-nowrap px-4 py-2 text-gray-700">
                     {formatDate(dbprice.updated_at)}

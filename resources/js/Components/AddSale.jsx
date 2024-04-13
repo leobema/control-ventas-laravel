@@ -5,7 +5,7 @@ import { useForm } from '@inertiajs/react'
 import { PlusIcon } from "@heroicons/react/24/outline";
 import PrimaryButton from "./PrimaryButton";
 
-const AddSale = ({products}) => {
+const AddSale = ({products, addSaleModalSetting}) => { 
   const [selectedProductName, setSelectedProductName] = useState('');
   const [availableDesigns, setAvailableDesigns] = useState([]);
   const [selectedAvailableDesign, setSelectedAvailableDesign] = useState(null);
@@ -61,7 +61,6 @@ const handleDesignChange = (e) => {
   setData('design', selectedDesign ? selectedDesign.design : '');
   setData('stock', selectedDesign ? selectedDesign.stock : 0);
   setData('price', selectedDesign ? selectedDesign.price : '');
-  console.log('selectedDesign', selectedDesign.stock);
 };
 
 const [open, setOpen] = useState(true);
@@ -72,7 +71,7 @@ const submit = (e) => {
   e.preventDefault();
     post(route('sales.store'), {onSuccess: ()=> {
       reset(); 
-      setOpen(false);
+      addSaleModalSetting();
     }
   }); 
 };
@@ -347,7 +346,7 @@ function getCurrentDate() {
                           <button
                             type="button"
                             className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                            onClick={() => setOpen(false)}
+                            onClick={() => addSaleModalSetting()}
                           >
                             Cancelar
                           </button>

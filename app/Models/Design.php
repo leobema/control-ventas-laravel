@@ -13,7 +13,7 @@ class Design extends Model
         return $this->belongsTo(User::class);
     }
 
-    protected $fillable = ['design', 'description', 'price', 'stock'];
+    protected $fillable = ['design', 'description', 'cost', 'price', 'stock'];
     
     public function product()
     {

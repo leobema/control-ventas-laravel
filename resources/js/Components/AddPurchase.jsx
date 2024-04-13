@@ -3,36 +3,58 @@ import { Dialog, Transition } from "@headlessui/react";
 import InputError from '@/Components/InputError'
 import { useForm } from '@inertiajs/react'
 import { PlusIcon } from "@heroicons/react/24/outline";
-import PrimaryButton from "./PrimaryButton";
+import PrimaryButton from "./PrimaryButton"; 
 
-const AddPurchase = ({dbpriceitems}) => {
-  const [selectedDesignName, setSelectedDesignName] = useState('');
+const AddPurchase = ({dbpriceitems, addSaleModalSetting}) => {
+/*   console.log('dbpriceitems', dbpriceitems)
+   const [selectedDesignName, setSelectedDesignName] = useState('');
   const [selectedItemPrice, setSelectedItemPrice] = useState('');
+  const [selectedMedida, setSelectedMedida] = useState('');  */
 
-  const initialFormData = { 
-    name: selectedDesignName,
-    price: selectedItemPrice,
-    stock: '',
-    date: '',
-    description: '',
-}
+const {data, setData, post, processing, reset, errors} = useForm({
+  name: '',
+  proveedor: '',
+  price: '',
+  medida: '',
+  stock: '',
+  date: '',
+  description: '',
+});
 
-const {data, setData, post, processing, reset, errors} = useForm(initialFormData);
+const [searchTerm, setSearchTerm] = useState('');
+const [filteredItems, setFilteredItems] = useState(dbpriceitems);
 
 useEffect(() => {
-  if (selectedItemPrice) {
-    setData('price', selectedItemPrice);
+  setFilteredItems(dbpriceitems.filter(item =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  ));
+}, [searchTerm, dbpriceitems]);
+
+/* useEffect(() => {
+  setData('name', selectedDesignName);
+  setData('price', selectedItemPrice);
+  setData('medida', selectedMedida);
+}, [selectedDesignName, selectedItemPrice, selectedMedida]);  */
+
+/* useEffect(() => {
+  if (selectedMedida) {
+    setData('medida', selectedMedida);
   }
-}, [selectedItemPrice]);
+}, [selectedMedida]);  */
+
 
 
 const handleNameChange = (e) => {
   const selectedProductId = e.target.value;
   const selectedItem = dbpriceitems.find(item => item.name === selectedProductId);
   if (selectedItem) {
-    setSelectedDesignName(selectedItem.name);
-    setSelectedItemPrice(selectedItem.price); 
-    setData('name', selectedItem.name)
+    setData({
+      ...data,
+      name: selectedItem.name,
+      proveedor: selectedItem.proveedor,
+      price: selectedItem.price,
+      medida: selectedItem.medida
+    });
   } 
 };
 
@@ -46,7 +68,7 @@ const submit = (e) => {
    post(route('purchases.store'), {
     onSuccess: () => {
       reset(); 
-      setOpen(false);
+      addSaleModalSetting();
     }
   });  
 };
@@ -132,34 +154,49 @@ const hasProductError = errors && errors.product;
                               <InputError message={hasProductError ? errors.product : null} className='mt-2'/> 
                             <select
                               value={data.name}
-                              onChange={handleNameChange} 
+                              onChange={handleNameChange}
                               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                             >
-                               <option value="">Seleccione un producto</option>
-                                {dbpriceitems.map(item => (
-                                  <option key={item.id} value={item.name}>
-                                    {item.name}
-                                  </option>
+                              <option value="">Seleccione un producto</option>
+                              {filteredItems.map((item) => (
+                                <option key={item.id} value={item.name}>
+                                  {item.name}
+                                </option>
                               ))}
-                            </select>  
+                            </select>
                           </div>
                         </div>
                         <div className="grid grid-flow-row gap-4 my-4 grid-cols-2">
                           <div className="col-span-2">
                               <div className="grid gap-4 my-2 grid-cols-2">
-                                 <div className="col-span-2">
-                                  <label
-                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                  >
-                                    Precio 
+                                <div className="col-span-1">
+                                  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Proveedor
                                   </label>
-                                  <input
-                                    disabled
-                                    value={`$${data.price}`}
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                  />
-                                </div>   
-                                <div>
+                                  <div className="flex">
+                                    <input
+                                      disabled
+                                      value={`${data.proveedor}`}
+                                      className="mr-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 flex-grow p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    />
+
+                                  </div>
+                                </div>
+                                <div className="col-span-1">
+                                  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Precio/Medida
+                                  </label>
+                                  <div className="flex">
+                                    <input
+                                      disabled
+                                      value={`$${data.price}/${data.medida}`}
+                                      className="mr-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 flex-grow p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    />
+
+                                  </div>
+                                </div>
+                                  
+                                <div className="col-span-1">
                                   <label
                                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                                   >
@@ -174,26 +211,27 @@ const hasProductError = errors && errors.product;
                                     placeholder="0 - 999"
                                   />
                                 </div>
+                                <div className="col-span-1">
+                                  <label 
+                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                  >
+                                    Fecha
+                                  </label>
+                                  <InputError message={errors.date} className='mt-2'/> 
+                                  <input
+                                    type="date"
+                                    value={data.date}
+                                    onChange={ (e)=> setData('date', e.target.value)}
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    placeholder=" - / - / -"
+                                    max={getCurrentDate()}
+                                  />
+                                </div>
                               </div>
-                          </div>
+                          </div> 
                         </div>
                         <div className="grid gap-4 mb-4 sm:grid-cols-2">
-                          <div>
-                            <label 
-                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                            >
-                              Fecha
-                            </label>
-                            <InputError message={errors.date} className='mt-2'/> 
-                            <input
-                              type="date"
-                              value={data.date}
-                              onChange={ (e)=> setData('date', e.target.value)}
-                              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                              placeholder=" - / - / -"
-                              max={getCurrentDate()}
-                            />
-                          </div>
+                          
                           <div className="sm:col-span-2">
                             <label
                               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -227,7 +265,7 @@ const hasProductError = errors && errors.product;
                           <button
                             type="button"
                             className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                            onClick={() => setOpen(false)} 
+                            onClick={() => addSaleModalSetting()} 
                           >
                             Cancelar
                           </button>
